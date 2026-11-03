@@ -1,13 +1,13 @@
 <!--
   Ticker de precios mayoristas · El Comercio
   Pegar tal cual en un bloque "Custom HTML" (Composer) o "HTML Box" (PageBuilder/Fusion).
-  Cambia data-src por la URL pública del JSON y data-href por la URL de la página
-  del dashboard (cada producto enlaza a data-href?producto=<id>). Sin data-href,
-  la tira no tiene enlaces. Puede haber varias instancias en la misma página.
+  Cambia data-src por la URL pública del JSON y data-href por la URL de la nota con
+  el dashboard: un clic en cualquier parte de la tira lleva a esa dirección. Sin
+  data-href, la tira no tiene enlace. Puede haber varias instancias en la misma página.
 -->
 <div class="ec-ticker" data-ec-ticker
      data-src="https://fabmonge.github.io/precios-mayoristas/data/ticker_precios.json"
-     data-href="https://elcomercio.pe/ecdata/URL-DEL-DASHBOARD/"
+     data-href="https://elcomercio.pe/URL-DE-LA-NOTA/#precios-mayoristas"
      role="region" aria-label="Precios mayoristas de alimentos en Lima" hidden>
   <div class="ec-ticker__label">
     <span class="ec-ticker__title">Precios de hoy</span>
@@ -79,9 +79,11 @@
     content: ""; position: absolute; right: 0; top: 50%;
     width: .8px; height: 20px; margin-top: -10px; background: var(--ec-linea);
   }
-  .ec-ticker__link, .ec-ticker__item { gap: 7px; }
-  .ec-ticker__link { display: inline-flex; align-items: center; color: inherit; text-decoration: none; }
-  .ec-ticker__link:hover .ec-ticker__name, .ec-ticker__link:focus-visible .ec-ticker__name { text-decoration: underline; }
+  .ec-ticker__item { gap: 7px; }
+  /* Toda la tira es un solo enlace: una capa transparente encima de todo */
+  .ec-ticker__enlace { position: absolute; inset: 0; z-index: 2; }
+  .ec-ticker__enlace:focus-visible { outline: 2px solid var(--ec-fg); outline-offset: -2px; }
+  .ec-ticker:hover .ec-ticker__title { text-decoration: underline; }
   .ec-ticker__icon  { flex: none; width: 20px; height: 20px; color: var(--ec-icon); }
   .ec-ticker__price { font-weight: 700; font-variant-numeric: tabular-nums; }
   .ec-ticker__var   { font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
@@ -184,7 +186,7 @@
     });
   }
 
-  function itemHTML(it, href) {
+  function itemHTML(it) {
     var v = it.variacion_pct;
     var tipo = v == null || Math.abs(v) < 0.05 ? "igual" : v > 0 ? "sube" : "baja";
     var flecha = { sube: "▲", baja: "▼", igual: "" }[tipo];
@@ -200,12 +202,8 @@
       '<span class="ec-ticker__price">S/ ' + it.precio.toFixed(2) + "</span>" +
       '<span class="ec-ticker__var ec-ticker__var--' + tipo + '" aria-hidden="true">' +
       (flecha ? flecha + " " + pct.replace(/^[+-]/, "") : pct) + "</span>";
-    if (href) {
-      var url = href + (href.indexOf("?") > -1 ? "&" : "?") + "producto=" + encodeURIComponent(it.id);
-      contenido = '<a class="ec-ticker__link" href="' + esc(url) + '" aria-label="' + esc(titulo + ". Ver estadísticas") + '">' + contenido + "</a>";
-    }
     return '<li class="ec-ticker__item' + (it.desactualizado ? " ec-ticker__item--stale" : "") +
-      '" title="' + esc(titulo) + '"' + (href ? "" : ' aria-label="' + esc(titulo) + '"') + ">" + contenido + "</li>";
+      '" aria-label="' + esc(titulo) + '">' + contenido + "</li>";
   }
 
   function render(root, data) {
@@ -216,10 +214,19 @@
     var viewport = root.querySelector(".ec-ticker__viewport");
     root.querySelector(".ec-ticker__date").textContent = "al " + fechaCorta(data.fecha_datos);
 
-    var href = root.getAttribute("data-href");
-    var bloque = items.map(function (it) { return itemHTML(it, href); }).join("");
+    var bloque = items.map(itemHTML).join("");
     track.innerHTML = bloque;
     root.hidden = false;
+
+    // Un clic en cualquier parte de la tira lleva al inicio de la nota (siempre la misma dirección)
+    var href = root.getAttribute("data-href");
+    if (href && !root.querySelector(".ec-ticker__enlace")) {
+      var enlace = document.createElement("a");
+      enlace.className = "ec-ticker__enlace";
+      enlace.href = href;
+      enlace.setAttribute("aria-label", "Precios mayoristas de hoy: ver todos los precios y su evolución");
+      root.appendChild(enlace);
+    }
 
     // Repetir el bloque hasta cubrir el ancho visible, y luego duplicar todo:
     // la animación va de 0 a -50%, así el bucle es continuo y sin saltos.
@@ -229,11 +236,7 @@
     track.innerHTML = mitad + mitad;
     // La segunda mitad es decorativa para lectores de pantalla
     var lis = track.children;
-    for (var i = items.length; i < lis.length; i++) {
-      lis[i].setAttribute("aria-hidden", "true");
-      var a = lis[i].querySelector("a");
-      if (a) a.setAttribute("tabindex", "-1"); // las copias no reciben foco con Tab
-    }
+    for (var i = items.length; i < lis.length; i++) lis[i].setAttribute("aria-hidden", "true");
 
     var velocidad = parseFloat(getComputedStyle(root).getPropertyValue("--ec-speed")) || 55;
     root.style.setProperty("--ec-duration", (track.scrollWidth / 2 / velocidad) + "s");
