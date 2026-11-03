@@ -470,7 +470,8 @@ def escribir_atomico(ruta: Path, data: dict, indent: int | None = 2) -> None:
     json.loads(texto)  # sanity check
     fd, tmp = tempfile.mkstemp(dir=ruta.parent, prefix=".tmp_", suffix=".json")
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as f:
+        # newline="\n": mismo archivo en Windows y en Linux (sin cambios fantasma en git)
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
             f.write(texto + "\n")
         os.replace(tmp, ruta)
     except BaseException:

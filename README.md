@@ -101,7 +101,9 @@ Para cambiar la canasta, edita `CANASTA` en el script. La variedad debe coincidi
 Advertencias:
 - GitHub puede retrasar los crons entre 5 y 30 min en horas punta.
 - GitHub desactiva los crons de repos sin actividad en 60 días. Los commits diarios del bot cuentan como actividad.
-- **IP extranjera:** los runners de GitHub están en EE. UU. Hoy el SISAP responde desde fuera del Perú, pero algunos servidores `gob.pe` bloquean IPs foráneas a veces. Si ves timeouts constantes en Actions, mueve el job a un *self-hosted runner* o a una Lambda/EC2 en `sa-east-1`. El script es el mismo.
+- **IP extranjera (confirmado el 3/11/2026):** el SISAP bloquea las conexiones desde fuera del Perú, y los servidores de GitHub están en EE. UU.: el workflow termina sin datos nuevos (no rompe nada). Por eso la actualización real corre desde el Perú con `scripts/actualizar_y_publicar.cmd` (Windows) o `.sh` (Linux):
+  - **Hoy:** tarea programada "Precios mayoristas El Comercio" en la PC de Fabrizio (7, 8 y 9 a.m.; si la PC estaba apagada, corre al prenderla). Registro en `%USERPROFILE%\PreciosMayoristas\actualizar.log`; Python en `%USERPROFILE%\PreciosMayoristas\venv`.
+  - **Definitivo:** un servidor del diario en el Perú. Ver `PARA_TECNOLOGIA.md`.
 
 ## Publicar el JSON
 
