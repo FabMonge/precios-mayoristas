@@ -35,7 +35,7 @@ frontend/demo-dashboard.html           demo local de ticker + dashboard
 
 ## Dashboard
 
-Cada producto del ticker enlaza a `data-href?producto=<id>`. El dashboard abre ese producto directamente.
+Un clic en cualquier parte del ticker lleva a `data-href`: el link de la nota con `#precios-mayoristas` al final, que es el ancla del inicio del dashboard. Así el lector llega siempre al comienzo del dashboard, aunque la nota tenga texto antes. El dashboard también acepta `?producto=<id>` para abrir un producto, pero el ticker ya no lo usa.
 
 - **Selector de periodo (Día / Semana / Mes), Semana por defecto.** Día = último precio vs. el día anterior. Semana y Mes = promedio de los últimos 7 (o 30) días vs. el de los 7 (o 30) previos. Con promedios, un día atípico no dispara la variación.
 - **Los que más subieron y bajaron:** entre todos los productos, las 4 mayores bajadas y las 8 mayores subidas (`RANKING_TOTAL`, `RANKING_BAJADAS`). Los productos con pocos días de precio en el periodo quedan fuera.
