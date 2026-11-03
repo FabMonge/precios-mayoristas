@@ -1,0 +1,93 @@
+{
+  "fecha_datos": "2026-11-03",
+  "es_hoy": true,
+  "generado": "2026-11-03T12:26:54-05:00",
+  "fuente": "MIDAGRI - SISAP",
+  "estado": "completo",
+  "items": [
+    {
+      "id": "papa-amarilla",
+      "nombre": "PAPA AMARILLA",
+      "detalle": "",
+      "icono": "papa",
+      "unidad": "kg",
+      "precio": 4.58,
+      "precio_anterior": 4.15,
+      "variacion_pct": 10.4,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    },
+    {
+      "id": "papa-blanca",
+      "nombre": "PAPA BLANCA",
+      "detalle": "",
+      "icono": "papa",
+      "unidad": "kg",
+      "precio": 1.55,
+      "precio_anterior": 1.53,
+      "variacion_pct": 1.3,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    },
+    {
+      "id": "cebolla-cabeza-roja",
+      "nombre": "CEBOLLA ROJA",
+      "detalle": "",
+      "icono": "cebolla",
+      "unidad": "kg",
+      "precio": 2.43,
+      "precio_anterior": 2.5,
+      "variacion_pct": -2.8,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    },
+    {
+      "id": "limon-sutil-cajon",
+      "nombre": "LIMÓN",
+      "detalle": "",
+      "icono": "limon",
+      "unidad": "kg",
+      "precio": 1.9,
+      "precio_anterior": 2.07,
+      "variacion_pct": -8.2,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    },
+    {
+      "id": "palta-fuerte",
+      "nombre": "PALTA FUERTE",
+      "detalle": "",
+      "icono": "palta",
+      "unidad": "kg",
+      "precio": 8.53,
+      "precio_anterior": 8.5,
+      "variacion_pct": 0.4,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    },
+    {
+      "id": "pollo-vivo",
+      "nombre": "POLLO VIVO",
+      "detalle": "",
+      "icono": "pollo",
+      "unidad": "kg",
+      "precio": 6.0,
+      "precio_anterior": 6.0,
+      "variacion_pct": 0.0,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    },
+    {
+      "id": "choclo-tipo-cusco",
+      "nombre": "CHOCLO",
+      "detalle": "",
+      "icono": "choclo",
+      "unidad": "kg",
+      "precio": 8.69,
+      "precio_anterior": 8.51,
+      "variacion_pct": 2.1,
+      "fecha": "2026-11-03",
+      "desactualizado": false
+    }
+  ]
+}
