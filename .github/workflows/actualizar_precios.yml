@@ -1,0 +1,83 @@
+name: Actualizar precios mayoristas (ticker + dashboard)
+
+on:
+  schedule:
+    # GitHub Actions usa UTC. Lima = UTC-5 todo el año (sin horario de verano).
+    # 12:00, 13:00 y 14:00 UTC  ->  07:00, 08:00 y 09:00 hora de Perú.
+    # Minuto 7 en vez de 0: el minuto :00 es el más congestionado y GitHub suele retrasarlo.
+    - cron: "7 12,13,14 * * *"
+  workflow_dispatch: # botón "Run workflow" para correrlo a mano
+
+permissions:
+  contents: write   # para hacer commit de los JSON
+  id-token: write   # solo si usas S3 con OIDC (opcional)
+
+concurrency:
+  group: actualizar-precios
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SALIDA: data/ticker_precios.json
+      HISTORICO: data/historico_precios.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Instalar dependencias
+        run: pip install -r scripts/requirements.txt
+
+      - name: Extraer precios del SISAP
+        # El script nunca rompe los JSON: si el MIDAGRI no responde o no hay datos
+        # suficientes, deja los archivos como están y sale con código 0.
+        # La primera corrida descarga 90 días de histórico (~1-2 min); luego solo lo nuevo.
+        run: python scripts/actualizar_precios.py --salida "$SALIDA" --historico "$HISTORICO"
+
+      - name: Commit y push si hubo cambios
+        id: commit
+        run: |
+          git add -N "$SALIDA" "$HISTORICO"  # detecta también archivos nuevos
+          if git diff --quiet -- "$SALIDA" "$HISTORICO"; then
+            echo "Sin cambios en los datos"
+            echo "cambio=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$SALIDA" "$HISTORICO"
+          git commit -m "Precios mayoristas $(TZ=America/Lima date +'%Y-%m-%d %H:%M')"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "cambio=true" >> "$GITHUB_OUTPUT"
+
+      # ---------- Opcional: publicar también en S3 / CloudFront ----------
+      # Define en Settings > Secrets and variables > Actions:
+      #   vars.S3_BUCKET (ej. ec-especiales), vars.AWS_REGION, secrets.AWS_ROLE_ARN
+      #   vars.CLOUDFRONT_ID (opcional)
+      - name: Credenciales AWS (OIDC)
+        if: steps.commit.outputs.cambio == 'true' && vars.S3_BUCKET != ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Subir a S3
+        if: steps.commit.outputs.cambio == 'true' && vars.S3_BUCKET != ''
+        run: |
+          for f in "$SALIDA" "$HISTORICO"; do
+            aws s3 cp "$f" "s3://${{ vars.S3_BUCKET }}/ticker/$(basename "$f")" \
+              --content-type "application/json; charset=utf-8" \
+              --cache-control "public, max-age=300"
+          done
+          if [ -n "${{ vars.CLOUDFRONT_ID }}" ]; then
+            aws cloudfront create-invalidation --distribution-id "${{ vars.CLOUDFRONT_ID }}" \
+              --paths "/ticker/*"
+          fi

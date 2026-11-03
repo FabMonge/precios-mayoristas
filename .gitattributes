@@ -1,0 +1,3 @@
+# Fin de línea LF en el repositorio (GitHub Actions corre en Linux)
+* text=auto eol=lf
+*.json text eol=lf

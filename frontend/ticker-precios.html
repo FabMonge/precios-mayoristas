@@ -1,0 +1,266 @@
+<!--
+  Ticker de precios mayoristas · El Comercio
+  Pegar tal cual en un bloque "Custom HTML" (Composer) o "HTML Box" (PageBuilder/Fusion).
+  Cambia data-src por la URL pública del JSON y data-href por la URL de la página
+  del dashboard (cada producto enlaza a data-href?producto=<id>). Sin data-href,
+  la tira no tiene enlaces. Puede haber varias instancias en la misma página.
+-->
+<div class="ec-ticker" data-ec-ticker
+     data-src="https://fabmonge.github.io/precios-mayoristas/data/ticker_precios.json"
+     data-href="https://elcomercio.pe/ecdata/URL-DEL-DASHBOARD/"
+     role="region" aria-label="Precios mayoristas de alimentos en Lima" hidden>
+  <div class="ec-ticker__label">
+    <span class="ec-ticker__title">Precios de hoy</span>
+    <span class="ec-ticker__date"></span>
+  </div>
+  <div class="ec-ticker__viewport">
+    <ul class="ec-ticker__track"></ul>
+  </div>
+</div>
+
+<style>
+  /* Estilo de la portada de elcomercio.pe: Roboto, fondo blanco y separadores finos
+     como la tira "Temas del día"; rojo #D60000 de "EN VIVO" para las subidas. */
+  .ec-ticker {
+    --ec-bg: #fff;
+    --ec-fg: #000;
+    --ec-muted: #595959;
+    --ec-linea: rgba(0, 0, 0, .2);  /* mismo separador que "Temas del día" */
+    --ec-sube: #d60000;   /* precio sube = encarece para el consumidor */
+    --ec-baja: #000;
+    --ec-igual: #8c8c8c;
+    --ec-icon: #000;      /* color de las siluetas */
+    --ec-speed: 50;       /* píxeles por segundo */
+    display: flex;
+    align-items: stretch;
+    height: 48px;
+    background: var(--ec-bg);
+    color: var(--ec-fg);
+    font: 400 16px/1 Roboto, "Helvetica Neue", Arial, sans-serif;
+    border-top: .8px solid var(--ec-linea);
+    border-bottom: .8px solid var(--ec-linea);
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .ec-ticker[hidden] { display: none; }
+  .ec-ticker *, .ec-ticker *::before, .ec-ticker *::after { box-sizing: border-box; }
+
+  .ec-ticker__label {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    align-self: center;
+    padding: 0 15px;
+    background: var(--ec-bg);
+    border-right: .8px solid var(--ec-linea);
+    z-index: 1;
+  }
+  .ec-ticker__title { font-weight: 700; }
+  .ec-ticker__date  { font-size: 14px; color: var(--ec-muted); }
+
+  .ec-ticker__viewport { flex: 1 1 auto; overflow: hidden; display: flex; align-items: center; }
+  .ec-ticker__track {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ec-ticker-scroll var(--ec-duration, 60s) linear infinite;
+  }
+  .ec-ticker:hover .ec-ticker__track,
+  .ec-ticker:focus-within .ec-ticker__track { animation-play-state: paused; }
+
+  .ec-ticker__item { display: inline-flex; align-items: center; padding: 0 20px; position: relative; }
+  .ec-ticker__item::after {
+    content: ""; position: absolute; right: 0; top: 50%;
+    width: .8px; height: 20px; margin-top: -10px; background: var(--ec-linea);
+  }
+  .ec-ticker__link, .ec-ticker__item { gap: 7px; }
+  .ec-ticker__link { display: inline-flex; align-items: center; color: inherit; text-decoration: none; }
+  .ec-ticker__link:hover .ec-ticker__name, .ec-ticker__link:focus-visible .ec-ticker__name { text-decoration: underline; }
+  .ec-ticker__icon  { flex: none; width: 20px; height: 20px; color: var(--ec-icon); }
+  .ec-ticker__price { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ec-ticker__var   { font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .ec-ticker__var--sube  { color: var(--ec-sube); }
+  .ec-ticker__var--baja  { color: var(--ec-baja); }
+  .ec-ticker__var--igual { color: var(--ec-igual); }
+  .ec-ticker__item--stale { opacity: .55; }
+
+  @keyframes ec-ticker-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }  /* la pista contiene 2 copias */
+  }
+
+  @media (max-width: 600px) {
+    .ec-ticker { height: 44px; font-size: 14px; }
+    .ec-ticker__label { flex-direction: column; align-items: flex-start; gap: 2px; padding: 0 10px; }
+    .ec-ticker__title { font-size: 13px; }
+    .ec-ticker__date  { font-size: 12px; }
+    .ec-ticker__item  { padding: 0 14px; }
+    .ec-ticker__var   { font-size: 13px; }
+    .ec-ticker__icon  { width: 18px; height: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ec-ticker__track { animation: none; }
+    .ec-ticker__viewport { overflow-x: auto; }
+  }
+</style>
+
+<script>
+(function () {
+  "use strict";
+  var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+  // Siluetas (viewBox 24x24, un color). Cada entrada es una lista de trazos con
+  // fill-rule evenodd: los subtrazos internos funcionan como recortes (ojos, hueso, granos).
+  var ICONOS = {
+    papa: [
+      "M2.6 14.6C1.9 11.4 3.6 8.2 6.6 6.6c2-1.1 3.6-.7 5.5-1.5 2.4-1 5.6-1 7.6 1 2.1 2.1 2.6 5 1.6 7.6-.7 1.8-.8 3.4-2.6 4.8-2 1.6-4.6 1.4-6.6 2.3-1.6.7-3.6 1-5.4.2-2.2-1-3.7-3.3-4.1-5.4Z" +
+      "M7 10.8a1 .8 -20 1 0 2 0a1 .8 -20 1 0-2 0ZM15.1 8.6a.9.7 -20 1 0 1.8 0a.9.7 -20 1 0-1.8 0Z" +
+      "M10.6 15.4a.9.7 -20 1 0 1.8 0a.9.7 -20 1 0-1.8 0ZM17 13.6a.8.6 -20 1 0 1.6 0a.8.6 -20 1 0-1.6 0Z"
+    ],
+    cebolla: [
+      "M12 2.2c.5 1.8 1.2 3 2.6 4.1 3 2.3 4.9 4.8 4.9 7.9 0 3.9-3.4 6.4-7.5 6.4s-7.5-2.5-7.5-6.4c0-3.1 1.9-5.6 4.9-7.9 1.4-1.1 2.1-2.3 2.6-4.1Z" +
+      "M11.2 8.6c-1.8 2.2-2.4 5-1.6 9.6l.9-.1c-.7-4.3-.2-6.9 1.4-8.9ZM12.8 8.6c1.8 2.2 2.4 5 1.6 9.6l-.9-.1c.7-4.3.2-6.9-1.4-8.9Z",
+      "M10 20.4l-1 2 .8.4 1.1-2.2ZM11.55 20.6v2.2h.9v-2.2ZM14 20.4l1 2-.8.4-1.1-2.2Z"
+    ],
+    limon: [
+      "M3.5 14a7.5 7.5 0 1 0 15 0a7.5 7.5 0 1 0-15 0ZM6.6 12.2c.6-2 2.1-3.4 4-3.9l.3.9c-1.6.5-2.8 1.6-3.3 3.3Z",
+      "M12.6 6.7C13.2 3.6 16.3 1.8 20.6 2.4c-.4 4-3.4 6.1-7.1 5.5Z"
+    ],
+    palta: [
+      "M12 2.4c2.6 0 3.7 2.4 4.5 5.1.8 2.7 3.1 4.5 3.1 8 0 3.9-3.4 6.3-7.6 6.3s-7.6-2.4-7.6-6.3c0-3.5 2.3-5.3 3.1-8 .8-2.7 1.9-5.1 4.5-5.1Z" +
+      "M12 4.2c1.6 0 2.3 1.6 3 3.9.8 2.8 2.9 4.4 2.9 7.4 0 2.9-2.6 4.6-5.9 4.6s-5.9-1.7-5.9-4.6c0-3 2.1-4.6 2.9-7.4.7-2.3 1.4-3.9 3-3.9Z" +
+      "M8.8 15.3a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0-6.4 0Z"
+    ],
+    pollo: [
+      "M3.2 5.5C4.5 7.5 6.5 10.5 8.5 11.2 10.5 11.6 12.6 10.6 14 9L14.6 6.5C14.6 4.8 15.8 3.8 17.2 3.8 18.6 3.8 19.6 4.8 19.6 6L21.6 6.8 19.7 7.6C19.9 9.5 20.3 11.5 19.8 13.5 19 17 16 18.6 12.5 18.6 8 18.6 5 16.5 4.2 13 3.6 10.6 3.2 8 3.2 5.5Z" +
+      "M17 5.6a.6.6 0 1 0 1.2 0a.6.6 0 1 0-1.2 0ZM8.6 12.6c2.2 3 6 3.1 8.2.4-2.4 1.2-5.6 1.2-8.2-.4Z",
+      "M15.6 4.3c-.4-1.4.4-2.2 1.1-1.5.3-.9 1.5-.9 1.6.1.8-.2 1.2.8.6 1.4Z",
+      "M19.5 7.6c.5 1 .4 1.9-.3 2-.5-.6-.4-1.3.1-2Z",
+      "M11 18.4l-.4 3-1.6.8.2.4 1.8-.6 1.6.6.2-.4-1.2-.8.3-3ZM14.3 18.3l-.3 3.1-1.1.7.2.4 1.4-.5 1.5.5.2-.4-1.3-.7.3-3.1Z"
+    ],
+    choclo: [
+      "M12 2c2.4 0 4 3.6 4 8.2S14.4 18 12 18s-4-3.2-4-7.8S9.6 2 12 2Z" +
+      "M10.6 4.5h.7v11h-.7ZM12.7 4.5h.7v11h-.7ZM8.6 7.2h6.8v.6H8.6ZM8.3 10.2h7.4v.6H8.3ZM8.6 13.2h6.8v.6H8.6Z",
+      "M12 22.5C7.2 21.8 4.4 17.4 4.8 9.8c1.3 4 3.4 7.1 7.2 8.9ZM12 22.5c4.8-.7 7.6-5.1 7.2-12.7-1.3 4-3.4 7.1-7.2 8.9Z"
+    ]
+  };
+  function iconoSVG(nombre) {
+    var trazos = ICONOS[nombre];
+    if (!trazos) return "";
+    return '<svg class="ec-ticker__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      trazos.map(function (d) { return '<path fill="currentColor" fill-rule="evenodd" d="' + d + '"/>'; }).join("") + "</svg>";
+  }
+
+  // Hora de Lima (UTC-5, sin horario de verano) independiente del huso del lector
+  function ahoraLima() {
+    var d = new Date();
+    return new Date(d.getTime() + d.getTimezoneOffset() * 60000 - 5 * 3600000);
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  // Cache-busting: cambia cada día y cada hora de Lima, así las corridas de
+  // 7, 8 y 9 a.m. se ven sin esperar a que expire la caché del CDN/navegador.
+  function versionCache() {
+    var l = ahoraLima();
+    return "" + l.getFullYear() + pad(l.getMonth() + 1) + pad(l.getDate()) + "-" + pad(l.getHours());
+  }
+
+  // "2026-10-22" -> "22 oct" (sin new Date(iso), que lo interpretaría en UTC y restaría un día)
+  function fechaCorta(iso) {
+    var p = (iso || "").split("-");
+    if (p.length !== 3) return "";
+    return parseInt(p[2], 10) + " " + MESES[parseInt(p[1], 10) - 1];
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function itemHTML(it, href) {
+    var v = it.variacion_pct;
+    var tipo = v == null || Math.abs(v) < 0.05 ? "igual" : v > 0 ? "sube" : "baja";
+    var flecha = { sube: "▲", baja: "▼", igual: "" }[tipo];
+    var pct = v == null ? "" : (v > 0 ? "+" : "") + v.toFixed(1) + "%";
+    // En mayúscula inicial, como los temas de la portada ("Papa León", "Temas del día")
+    var nombre = it.nombre.charAt(0) + it.nombre.slice(1).toLowerCase();
+    var titulo = nombre + (it.detalle ? " " + it.detalle.toLowerCase() : "") +
+      ": S/ " + it.precio.toFixed(2) + " por " + (it.unidad || "kg") +
+      (v == null ? "" : ", " + (tipo === "igual" ? "sin variación" : (tipo === "sube" ? "sube " : "baja ") + pct)) +
+      (it.desactualizado ? " (dato del " + fechaCorta(it.fecha) + ")" : "");
+    var contenido = iconoSVG(it.icono) +
+      '<span class="ec-ticker__name">' + esc(nombre) + "</span>" +
+      '<span class="ec-ticker__price">S/ ' + it.precio.toFixed(2) + "</span>" +
+      '<span class="ec-ticker__var ec-ticker__var--' + tipo + '" aria-hidden="true">' +
+      (flecha ? flecha + " " + pct.replace(/^[+-]/, "") : pct) + "</span>";
+    if (href) {
+      var url = href + (href.indexOf("?") > -1 ? "&" : "?") + "producto=" + encodeURIComponent(it.id);
+      contenido = '<a class="ec-ticker__link" href="' + esc(url) + '" aria-label="' + esc(titulo + ". Ver estadísticas") + '">' + contenido + "</a>";
+    }
+    return '<li class="ec-ticker__item' + (it.desactualizado ? " ec-ticker__item--stale" : "") +
+      '" title="' + esc(titulo) + '"' + (href ? "" : ' aria-label="' + esc(titulo) + '"') + ">" + contenido + "</li>";
+  }
+
+  function render(root, data) {
+    var items = (data && data.items || []).filter(function (it) { return typeof it.precio === "number"; });
+    if (!items.length) return;
+
+    var track = root.querySelector(".ec-ticker__track");
+    var viewport = root.querySelector(".ec-ticker__viewport");
+    root.querySelector(".ec-ticker__date").textContent = "al " + fechaCorta(data.fecha_datos);
+
+    var href = root.getAttribute("data-href");
+    var bloque = items.map(function (it) { return itemHTML(it, href); }).join("");
+    track.innerHTML = bloque;
+    root.hidden = false;
+
+    // Repetir el bloque hasta cubrir el ancho visible, y luego duplicar todo:
+    // la animación va de 0 a -50%, así el bucle es continuo y sin saltos.
+    var anchoBloque = track.scrollWidth || 1;
+    var veces = Math.max(1, Math.ceil(viewport.clientWidth / anchoBloque));
+    var mitad = new Array(veces + 1).join(bloque);
+    track.innerHTML = mitad + mitad;
+    // La segunda mitad es decorativa para lectores de pantalla
+    var lis = track.children;
+    for (var i = items.length; i < lis.length; i++) {
+      lis[i].setAttribute("aria-hidden", "true");
+      var a = lis[i].querySelector("a");
+      if (a) a.setAttribute("tabindex", "-1"); // las copias no reciben foco con Tab
+    }
+
+    var velocidad = parseFloat(getComputedStyle(root).getPropertyValue("--ec-speed")) || 55;
+    root.style.setProperty("--ec-duration", (track.scrollWidth / 2 / velocidad) + "s");
+  }
+
+  function cargar(root) {
+    var src = root.getAttribute("data-src");
+    if (!src) return;
+    var url = src + (src.indexOf("?") > -1 ? "&" : "?") + "v=" + versionCache();
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 8000);
+
+    fetch(url, { cache: "no-cache", signal: ctrl && ctrl.signal })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (data) { render(root, data); })
+      .catch(function (e) { if (window.console) console.warn("[ec-ticker]", e); }) // queda oculto
+      .then(function () { if (timer) clearTimeout(timer); });
+  }
+
+  function init() {
+    var nodos = document.querySelectorAll("[data-ec-ticker]:not([data-ec-ready])");
+    for (var i = 0; i < nodos.length; i++) {
+      nodos[i].setAttribute("data-ec-ready", "1");
+      cargar(nodos[i]);
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+</script>

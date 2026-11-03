@@ -1,0 +1,787 @@
+<!--
+  Dashboard de precios mayoristas · ECData / El Comercio
+  Pegar tal cual en un bloque "Custom HTML" (Composer) o "HTML Box" (PageBuilder/Fusion)
+  de la página a la que enlaza el ticker. Solo cambia data-src por la URL pública de
+  historico_precios.json. Acepta ?producto=<id> para abrir un producto (lo usa el ticker).
+-->
+<div class="ecd-dash" data-ecd-dash
+     data-src="https://fabmonge.github.io/precios-mayoristas/data/historico_precios.json">
+
+  <header class="ecd-head">
+    <div class="ecd-logos">
+      <img class="ecd-logo" alt="ECData" width="74" height="24" src="data:image/webp;base64,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">
+      <span class="ecd-logos__sep" aria-hidden="true"></span>
+      <!-- Reemplazar por <img class="ecd-logo" alt="Economía" src="..."> cuando esté el logo de Economía -->
+      <span class="ecd-logo ecd-logo--texto">Economía</span>
+    </div>
+    <h1 class="ecd-headline">Precios mayoristas: cuánto cuesta hoy la canasta en Lima</h1>
+    <h2 class="ecd-subheadline">Los precios de <span data-ecd="n-productos">todos los</span> productos de los mercados mayoristas de Lima, actualizados cada mañana con datos del Midagri</h2>
+    <div class="ecd-divider"></div>
+    <p class="ecd-date">Precios al <span data-ecd="fecha">…</span></p>
+  </header>
+
+  <div class="ecd-filtros" role="group" aria-label="Periodo de comparación">
+    <span class="ecd-filtros__label">Comparar por</span>
+    <div class="ecd-seg">
+      <button type="button" data-periodo="dia" aria-pressed="false">Día</button>
+      <button type="button" data-periodo="semana" aria-pressed="true">Semana</button>
+      <button type="button" data-periodo="mes" aria-pressed="false">Mes</button>
+    </div>
+  </div>
+  <p class="ecd-periodo-nota" data-ecd="periodo-nota"></p>
+
+  <section class="ecd-section">
+    <h3 class="ecd-title">Los que más subieron y bajaron</h3>
+    <p class="ecd-subtitle" data-ecd="ranking-sub"></p>
+    <div class="ecd-chart" data-chart="ranking"></div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+  </section>
+
+  <section class="ecd-section">
+    <h3 class="ecd-title">¿Subieron los precios?</h3>
+    <p class="ecd-subtitle" data-ecd="indice-sub">Índice de una canasta de productos básicos</p>
+    <div class="ecd-hero" data-ecd="hero"></div>
+    <div class="ecd-chart" data-chart="indice"></div>
+    <div class="data-note">El índice es la media geométrica de la variación diaria de los precios de todos los productos, encadenada desde el primer día (= 100), el método estándar para índices sin ponderar: evita que un solo producto que se dispara arrastre a todos los demás. No pondera por el consumo de los hogares. El Gran Mercado Mayorista no opera domingos ni feriados, por lo que esos días no se incluyen.</div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+  </section>
+
+  <section class="ecd-section">
+    <h3 class="ecd-title">¿Caro o barato para lo que suele costar?</h3>
+    <p class="ecd-subtitle">Precio de hoy de los productos del gráfico anterior, dentro de su rango de los últimos 90 días</p>
+    <div class="ecd-leyenda" aria-hidden="true">
+      <span><i class="ecd-sw ecd-sw--rango"></i>Rango de 90 días</span>
+      <span><i class="ecd-sw ecd-sw--prom"></i>Promedio</span>
+      <span><i class="ecd-sw ecd-sw--caro"></i>Hoy, sobre el promedio</span>
+      <span><i class="ecd-sw ecd-sw--barato"></i>Hoy, bajo el promedio</span>
+    </div>
+    <div class="ecd-chart" data-chart="rango"></div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+  </section>
+
+  <div class="instrucciones-caja">
+    <p class="instrucciones-caja__titulo">¿Cómo usar el buscador?</p>
+    <ul>
+      <li>Escribe el nombre de un producto y elige una de las opciones que aparecen</li>
+      <li>O toca la flecha para ver la lista completa, ordenada por tipo de producto</li>
+      <li>Toca cualquier producto de los gráficos de arriba para ver su detalle</li>
+      <li>Pasa el cursor o el dedo sobre la línea para ver el precio de cada día</li>
+      <li>Los botones Día, Semana y Mes cambian el periodo de comparación</li>
+    </ul>
+  </div>
+
+  <section class="ecd-section ecd-producto" id="ecd-producto-seccion">
+    <h3 class="ecd-title">Busca un producto</h3>
+    <div class="ecd-combo">
+      <label for="ecd-buscar" class="ecd-visually-hidden">Escribe o elige un producto</label>
+      <input id="ecd-buscar" class="ecd-combo__input" data-ecd="buscar" type="text" autocomplete="off"
+             placeholder="Escribe un producto, por ejemplo: papa" role="combobox"
+             aria-autocomplete="list" aria-expanded="false" aria-controls="ecd-opciones">
+      <button type="button" class="ecd-combo__boton" data-ecd="ver-todos" tabindex="-1"
+              aria-label="Ver todos los productos" aria-expanded="false" aria-controls="ecd-opciones"></button>
+      <ul id="ecd-opciones" class="ecd-combo__lista" data-ecd="opciones" role="listbox" hidden></ul>
+    </div>
+    <p class="ecd-frase" data-ecd="frase" aria-live="polite"></p>
+    <div class="ecd-chart" data-chart="producto"></div>
+    <div class="data-note" data-ecd="producto-nota"></div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+  </section>
+
+  <p class="ecd-error" data-ecd="error" hidden>No pudimos cargar los precios en este momento. Vuelve a intentarlo en unos minutos.</p>
+  <div class="ecd-tip" data-ecd="tip" role="tooltip" hidden></div>
+</div>
+
+<style>
+  .ecd-dash {
+    --rust: #d65442;
+    --rust-2: #d86a4a;
+    --rust-light: #e9aaa1;
+    --sand: #B8B2A3;
+    --sand-light: #c9c4b8;
+    --dark: #4a4741;
+    --gray: #7a756b;
+    --gray-2: #a39d90;
+    --ink: #1f1d1a;
+    --card: #f3f2ef;
+    --line: #e4e1da;
+    color-scheme: light;
+    background: #fff;
+    color: var(--ink);
+    font: 16px/1.5 "Helvetica Neue", Arial, sans-serif;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+    box-sizing: border-box;
+  }
+  .ecd-dash *, .ecd-dash *::before, .ecd-dash *::after { box-sizing: border-box; }
+
+  .ecd-head { text-align: center; padding: 24px 0 8px; }
+  .ecd-logos { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0 0 14px; }
+  .ecd-logo { display: block; height: 24px; width: auto; }
+  .ecd-logo--texto { height: auto; font: 700 20px/24px Georgia, "Times New Roman", serif; color: var(--ink); }
+  .ecd-logos__sep { width: 1px; height: 22px; background: var(--sand); }
+  .ecd-headline { font: 700 clamp(26px, 5vw, 38px)/1.15 Georgia, "Times New Roman", serif; margin: 0 0 10px; }
+  .ecd-subheadline { font: 400 clamp(17px, 3vw, 20px)/1.35 Georgia, serif; color: var(--dark); margin: 0; }
+  .ecd-divider { width: 56px; height: 3px; background: var(--rust); margin: 18px auto 12px; }
+  .ecd-date { margin: 0; font-size: 14px; color: var(--gray); }
+
+  .ecd-filtros { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 20px 0 6px; position: sticky; top: 0; z-index: 2; background: #fff; padding: 8px 0; }
+  .ecd-filtros__label { font-size: 14px; color: var(--gray); }
+  .ecd-seg { display: inline-flex; background: var(--card); border-radius: 999px; padding: 3px; }
+  .ecd-seg button {
+    font: inherit; font-weight: 600; font-size: 14px; line-height: 1; color: var(--dark);
+    border: 0; background: transparent; border-radius: 999px; padding: 9px 18px; cursor: pointer; min-height: 36px;
+  }
+  .ecd-seg button[aria-pressed="true"] { background: var(--dark); color: #fff; }
+  .ecd-seg button:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+  .ecd-periodo-nota { text-align: center; font-size: 13px; color: var(--gray); margin: 0 0 8px; }
+
+  .ecd-section { margin: 36px 0 0; scroll-margin-top: 72px; } /* deja ver el título bajo la barra fija de filtros */
+  .ecd-title { font: 700 22px/1.25 Georgia, serif; margin: 0 0 4px; text-align: center; }
+  .ecd-subtitle { font-size: 15px; color: var(--gray); margin: 0 0 14px; text-align: center; }
+  .ecd-chart { position: relative; width: 100%; }
+  .ecd-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .ecd-hero { text-align: center; margin: 0 auto 12px; max-width: 560px; }
+  .ecd-hero__num { font: 700 44px/1 Georgia, serif; display: block; }
+  .ecd-hero__txt { font-size: 15px; color: var(--dark); display: block; margin-top: 6px; }
+  .ecd-flecha--sube { color: var(--rust); }
+  .ecd-flecha--baja { color: var(--dark); }
+  .ecd-flecha--igual { color: var(--gray-2); }
+
+  .data-note { font-size: 12px; color: var(--gray); text-align: center; margin: 12px auto 0; max-width: 600px; }
+  .source-note { font-size: 12px; color: var(--gray-2); text-align: center; margin: 6px auto 0; max-width: 600px; }
+
+  .ecd-leyenda { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 13px; color: var(--dark); margin: 0 0 10px; }
+  .ecd-leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+  .ecd-sw { display: inline-block; flex: none; }
+  .ecd-sw--rango { width: 22px; height: 6px; border-radius: 3px; background: var(--sand-light); }
+  .ecd-sw--prom { width: 2px; height: 12px; background: var(--dark); }
+  .ecd-sw--caro, .ecd-sw--barato { width: 10px; height: 10px; border-radius: 50%; }
+  .ecd-sw--caro { background: var(--rust); }
+  .ecd-sw--barato { background: var(--dark); }
+
+
+  .instrucciones-caja { background: var(--card); border-left: 4px solid var(--rust); padding: 14px 18px; margin: 40px 0 0; border-radius: 4px; font-size: 15px; }
+  .instrucciones-caja__titulo { font: 700 16px/1.3 Georgia, serif; margin: 0 0 6px; }
+  .instrucciones-caja ul { margin: 0; padding-left: 20px; }
+
+  .ecd-combo { position: relative; max-width: 420px; margin: 6px auto 16px; }
+  .ecd-combo__input {
+    width: 100%; font: inherit; font-size: 16px; font-weight: 600; color: var(--ink);
+    padding: 12px 46px 12px 14px; border: 1px solid var(--sand); border-radius: 6px; background: #fff;
+  }
+  .ecd-combo__input::placeholder { font-weight: 400; color: var(--gray); }
+  .ecd-combo__input:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+  .ecd-combo__boton { position: absolute; top: 0; right: 0; width: 44px; height: 100%; border: 0; background: transparent; cursor: pointer; }
+  .ecd-combo__boton::after { /* misma flecha que tenía la lista desplegable */
+    content: ""; position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; margin: -6px 0 0 -4px;
+    border-right: 2px solid var(--dark); border-bottom: 2px solid var(--dark); transform: rotate(45deg);
+  }
+  .ecd-combo__boton[aria-expanded="true"]::after { margin-top: -2px; transform: rotate(-135deg); }
+  .ecd-combo__lista {
+    position: absolute; z-index: 5; left: 0; right: 0; top: calc(100% + 4px); margin: 0; padding: 4px 0;
+    list-style: none; background: #fff; border: 1px solid var(--line); border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.12); max-height: 320px; overflow-y: auto;
+  }
+  .ecd-combo__grupo { padding: 10px 14px 4px; font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: .04em; }
+  .ecd-combo__op { padding: 9px 14px; cursor: pointer; font-size: 15px; display: flex; justify-content: space-between; gap: 10px; }
+  .ecd-combo__op small { color: var(--gray); font-size: 12px; white-space: nowrap; }
+  .ecd-combo__op[aria-selected="true"], .ecd-combo__op:hover { background: var(--card); }
+  .ecd-combo__vacio { padding: 9px 14px; color: var(--gray); font-size: 14px; }
+
+  .ecd-frase { font: 400 19px/1.5 Georgia, "Times New Roman", serif; color: var(--ink); max-width: 620px; margin: 0 auto 18px; text-align: center; }
+  .ecd-frase b { font-weight: 700; white-space: nowrap; }
+
+  .ecd-tip {
+    position: fixed; z-index: 9999; pointer-events: none; max-width: 240px;
+    background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.12); padding: 8px 10px; font-size: 13px; line-height: 1.4;
+  }
+  .ecd-tip b { font-weight: 700; }
+  .ecd-tip .ecd-tip__muted { color: var(--gray); }
+
+  .ecd-error { text-align: center; color: var(--gray); background: var(--card); padding: 16px; border-radius: 6px; margin-top: 24px; }
+  .ecd-visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .ecd-dash .ecd-axis text { fill: var(--gray); font-size: 12px; }
+  .ecd-dash .ecd-grid line { stroke: var(--line); }
+  .ecd-dash .ecd-row { cursor: pointer; }
+  .ecd-dash .ecd-row:hover .ecd-row__nombre, .ecd-dash .ecd-row:focus .ecd-row__nombre { text-decoration: underline; }
+  .ecd-dash .ecd-row:focus { outline: none; }
+  .ecd-dash .ecd-row:focus-visible .ecd-row__hit { stroke: var(--rust); stroke-width: 2; }
+</style>
+
+<script>
+(function () {
+  "use strict";
+  var D3_URL = "https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js";
+  var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  var PERIODOS = {
+    dia:    { n: 1,  hero: "Respecto al día anterior",
+              nota: "Precio del último día frente al día anterior con datos" },
+    semana: { n: 7,  hero: "En la última semana",
+              nota: "Promedio de los últimos 7 días frente al de los 7 días previos" },
+    mes:    { n: 30, hero: "En el último mes",
+              nota: "Promedio de los últimos 30 días frente al de los 30 días previos" }
+  };
+
+  // ---------------------------------------------------------------- utilidades
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function versionCache() { // cambia cada hora de Lima: las corridas de 7, 8 y 9 a.m. se ven al instante
+    var d = new Date(), l = new Date(d.getTime() + d.getTimezoneOffset() * 60000 - 5 * 3600000);
+    return "" + l.getFullYear() + pad(l.getMonth() + 1) + pad(l.getDate()) + "-" + pad(l.getHours());
+  }
+  function aFecha(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); } // local, sin desfase UTC
+  function fCorta(iso) { var p = iso.split("-"); return +p[2] + " " + MESES[+p[1] - 1]; }
+  function fSol(v) { return v == null ? "–" : "S/ " + v.toFixed(2); } // espacio duro: "S/" nunca queda separado del número
+  function fPct(v) { return v == null ? "–" : (v > 0.0005 ? "+" : "") + (v * 100).toFixed(1) + "%"; }
+  function tipo(v) { return v == null || Math.abs(v) < 0.0005 ? "igual" : v > 0 ? "sube" : "baja"; }
+  function flecha(v) { var t = tipo(v); return '<span class="ecd-flecha--' + t + '">' + { sube: "▲", baja: "▼", igual: "=" }[t] + "</span>"; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  // Sin tildes ni mayúsculas, para buscar "limon" y encontrar "Limón"
+  function sinTildes(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+
+  // Ancho del contenedor; mínimo 320 por si se dibuja dentro de algo oculto (se redibuja al aparecer)
+  function ancho(el) { return Math.max(320, el.clientWidth || 0); }
+
+  // Media geométrica de razones de precio: un producto que se dispara no arrastra toda la canasta
+  function mediaGeo(razones) { return Math.exp(d3.mean(razones, function (r) { return Math.log(r); })); }
+
+  function prom(s, a, b) { var t = 0, n = 0; for (var i = Math.max(0, a); i <= b; i++) if (s[i] != null) { t += s[i]; n++; } return n ? t / n : null; }
+  function cuenta(s, a, b) { var n = 0; for (var i = Math.max(0, a); i <= b; i++) if (s[i] != null) n++; return n; }
+  function ultimo(s, desde) { for (var i = desde; i >= 0; i--) if (s[i] != null) return i; return -1; }
+  function cambio(s, L, per) {
+    if (per === "dia") {
+      var a = ultimo(s, L), b = a > 0 ? ultimo(s, a - 1) : -1;
+      return a < 0 || b < 0 ? null : s[a] / s[b] - 1;
+    }
+    var n = PERIODOS[per].n, act = prom(s, L - n + 1, L), ant = prom(s, L - 2 * n + 1, L - n);
+    // Con pocos días con precio el promedio no es confiable (productos que se venden a veces)
+    var minimo = Math.ceil(n * 0.4);
+    if (cuenta(s, L - n + 1, L) < minimo || cuenta(s, L - 2 * n + 1, L - n) < minimo) return null;
+    return act != null && ant ? act / ant - 1 : null;
+  }
+
+  function modelo(data) {
+    var fechas = data.fechas, L = fechas.length - 1;
+    var prods = data.productos.map(function (p) {
+      var s = data.precios[p.id] || [], valores = s.filter(function (v) { return v != null; });
+      var iHoy = ultimo(s, L), iMin = -1, iMax = -1;
+      s.forEach(function (v, i) {
+        if (v == null) return;
+        // Con empates gana el día más reciente (si hoy iguala el máximo, el máximo es hoy)
+        if (iMin < 0 || v <= s[iMin]) iMin = i;
+        if (iMax < 0 || v >= s[iMax]) iMax = i;
+      });
+      return {
+        id: p.id, nombre: p.nombre, grupo: p.grupo, mercado: p.mercado, unidad: p.unidad || "kg",
+        canasta: !!p.canasta, principal: p.principal !== false, serie: s, n: valores.length,
+        busca: sinTildes(p.nombre + " " + p.grupo),
+        hoy: iHoy < 0 ? null : s[iHoy], iHoy: iHoy, iMin: iMin, iMax: iMax,
+        min: s[iMin], max: s[iMax],
+        prom: valores.length ? d3.mean(valores) : null,
+        base: valores.length ? valores[0] : null
+      };
+    }).filter(function (p) { return p.n >= 2; }); // con un solo precio no hay línea ni comparación
+
+    // "¿Subieron los precios?" mide todos los productos (sin repetir una variedad que se vende
+    // en varios mercados). Índice encadenado: cada día compara solo los productos con precio ese
+    // día y el anterior, así un producto que aparece o desaparece no mueve el índice.
+    var general = prods.filter(function (p) { return p.principal; });
+    // Días válidos: con al menos la mitad de los productos de un día normal. Excluye domingos y
+    // feriados (solo publican Aves y Frutas, ~45%) pero no una mañana en que algún mercado aún
+    // no publica: al encadenar solo se comparan los productos presentes ambos días.
+    var porDia = fechas.map(function (f, i) { return general.filter(function (p) { return p.serie[i] != null; }).length; });
+    var normal = d3.quantile(porDia.slice().sort(d3.ascending), 0.9) || 0;
+    var indice = [], ant = -1, nivel = 100;
+    fechas.forEach(function (f, i) {
+      if (porDia[i] < normal * 0.5) return;
+      if (ant > -1) {
+        var r = general.filter(function (p) { return p.serie[i] != null && p.serie[ant] != null; })
+                       .map(function (p) { return p.serie[i] / p.serie[ant]; });
+        if (r.length) nivel *= mediaGeo(r);
+      }
+      indice.push({ i: i, fecha: f, v: nivel });
+      ant = i;
+    });
+
+    return { fechas: fechas, L: L, prods: prods, general: general, indice: indice };
+  }
+
+  // ---------------------------------------------------------------- tooltip
+  function crearTip(el) {
+    return {
+      show: function (html, x, y) {
+        el.innerHTML = html; el.hidden = false;
+        var w = el.offsetWidth, h = el.offsetHeight, vw = document.documentElement.clientWidth;
+        var left = Math.min(Math.max(8, x + 14), vw - w - 8), top = y - h - 12;
+        if (top < 8) top = y + 16;
+        el.style.left = left + "px"; el.style.top = top + "px";
+      },
+      hide: function () { el.hidden = true; }
+    };
+  }
+
+  // Barra horizontal con extremo de dato redondeado y base recta
+  function barra(x0, x1, y, h, r) {
+    var izq = x1 < x0, a = Math.min(x0, x1), b = Math.max(x0, x1), w = b - a;
+    r = Math.min(r, w / 2, h / 2);
+    if (w <= 0) return "";
+    return izq
+      ? "M" + b + "," + y + "H" + (a + r) + "Q" + a + "," + y + " " + a + "," + (y + r) + "V" + (y + h - r) + "Q" + a + "," + (y + h) + " " + (a + r) + "," + (y + h) + "H" + b + "Z"
+      : "M" + a + "," + y + "H" + (b - r) + "Q" + b + "," + y + " " + b + "," + (y + r) + "V" + (y + h - r) + "Q" + b + "," + (y + h) + " " + (b - r) + "," + (y + h) + "H" + a + "Z";
+  }
+
+  // ---------------------------------------------------------------- gráficos
+  function chartIndice(el, M, per, tip) {
+    var w = ancho(el), h = w < 500 ? 220 : 280, m = { t: 20, r: 44, b: 28, l: 4 };
+    var datos = M.indice, n = PERIODOS[per].n;
+    var x = d3.scaleTime().domain(d3.extent(datos, function (d) { return aFecha(d.fecha); })).range([m.l, w - m.r]);
+    var ext = d3.extent(datos, function (d) { return d.v; });
+    var y = d3.scaleLinear().domain([Math.min(ext[0], 100) - 2, Math.max(ext[1], 100) + 2]).nice().range([h - m.b, m.t]);
+
+    var svg = d3.select(el).html("").append("svg").attr("viewBox", "0 0 " + w + " " + h)
+      .attr("role", "img").attr("aria-label", "Índice de precios de la canasta en los últimos 90 días");
+
+    // Ventana del periodo actual (semana o mes)
+    if (n > 1 && datos.length > n) {
+      var x0 = x(aFecha(datos[datos.length - n].fecha)), x1 = x(aFecha(datos[datos.length - 1].fecha));
+      svg.append("rect").attr("x", x0).attr("y", m.t).attr("width", Math.max(2, x1 - x0)).attr("height", h - m.b - m.t).attr("fill", "#f3f2ef");
+      svg.append("text").attr("x", x1).attr("y", m.t - 6).attr("text-anchor", "end").attr("font-size", 11).attr("fill", "#7a756b")
+        .text(per === "semana" ? "últimos 7 días" : "últimos 30 días");
+    }
+
+    var gy = svg.append("g").attr("class", "ecd-grid ecd-axis");
+    y.ticks(4).forEach(function (t) {
+      gy.append("line").attr("x1", m.l).attr("x2", w - m.r).attr("y1", y(t)).attr("y2", y(t));
+      gy.append("text").attr("x", w - m.r + 6).attr("y", y(t)).attr("dy", "0.32em").text(t);
+    });
+    svg.append("line").attr("x1", m.l).attr("x2", w - m.r).attr("y1", y(100)).attr("y2", y(100))
+      .attr("stroke", "#7a756b").attr("stroke-dasharray", "3 3");
+
+    var gx = svg.append("g").attr("class", "ecd-axis").attr("transform", "translate(0," + (h - m.b + 18) + ")");
+    x.ticks(w < 500 ? 3 : 5).forEach(function (t) {
+      gx.append("text").attr("x", x(t)).attr("text-anchor", "middle").text(t.getDate() + " " + MESES[t.getMonth()]);
+    });
+
+    var linea = d3.line().x(function (d) { return x(aFecha(d.fecha)); }).y(function (d) { return y(d.v); });
+    svg.append("path").datum(datos).attr("d", linea).attr("fill", "none").attr("stroke", "#4a4741").attr("stroke-width", 2).attr("stroke-linejoin", "round");
+
+    var ult = datos[datos.length - 1];
+    svg.append("circle").attr("cx", x(aFecha(ult.fecha))).attr("cy", y(ult.v)).attr("r", 4.5).attr("fill", "#4a4741").attr("stroke", "#fff").attr("stroke-width", 2);
+
+    // Capa de hover: regla vertical + punto + tooltip
+    var regla = svg.append("line").attr("y1", m.t).attr("y2", h - m.b).attr("stroke", "#a39d90").attr("visibility", "hidden");
+    var punto = svg.append("circle").attr("r", 5).attr("fill", "#4a4741").attr("stroke", "#fff").attr("stroke-width", 2).attr("visibility", "hidden");
+    var bis = d3.bisector(function (d) { return aFecha(d.fecha); }).center;
+    svg.append("rect").attr("x", m.l).attr("y", 0).attr("width", w - m.l - m.r).attr("height", h).attr("fill", "transparent")
+      .style("touch-action", "pan-y")
+      .on("pointermove pointerdown", function (ev) {
+        var px = d3.pointer(ev)[0], d = datos[bis(datos, x.invert(px))], cx = x(aFecha(d.fecha));
+        regla.attr("x1", cx).attr("x2", cx).attr("visibility", "visible");
+        punto.attr("cx", cx).attr("cy", y(d.v)).attr("visibility", "visible");
+        tip.show("<b>" + fCorta(d.fecha) + "</b><br>Índice: " + d.v.toFixed(1) +
+          '<br><span class="ecd-tip__muted">' + fPct(d.v / 100 - 1) + " vs. " + fCorta(datos[0].fecha) + "</span>", ev.clientX, ev.clientY);
+      })
+      .on("pointerleave", function () { regla.attr("visibility", "hidden"); punto.attr("visibility", "hidden"); tip.hide(); });
+  }
+
+  // Los que más subieron y bajaron, entre todos los productos (sin repetir una variedad
+  // que se vende en varios mercados): hasta 4 bajadas y el resto, hasta 12, las mayores subidas.
+  var RANKING_TOTAL = 12, RANKING_BAJADAS = 4;
+  function seleccionRanking(M, per) {
+    var todos = M.prods.filter(function (p) { return p.principal; })
+      .map(function (p) { return { p: p, v: cambio(p.serie, M.L, per) }; })
+      .filter(function (d) { return d.v != null; });
+    var bajadas = todos.filter(function (d) { return tipo(d.v) === "baja"; })
+      .sort(function (a, b) { return a.v - b.v; }).slice(0, RANKING_BAJADAS);
+    var subidas = todos.filter(function (d) { return tipo(d.v) === "sube"; })
+      .sort(function (a, b) { return b.v - a.v; }).slice(0, RANKING_TOTAL - bajadas.length);
+    var filas = subidas.concat(bajadas).sort(function (a, b) { return b.v - a.v; });
+    filas.total = todos.length;
+    return filas;
+  }
+
+  function chartRanking(el, filas, tip, alElegir) {
+    var w = ancho(el), movil = w < 500, lab = movil ? 118 : 190, valW = 52;
+    var fila = 30, bh = 16, h = filas.length * fila + 8;
+    var lim = d3.max(filas, function (d) { return Math.abs(d.v); }) || 0.01;
+    var x = d3.scaleLinear().domain([-lim, lim]).range([lab + valW, w - valW]);
+
+    var svg = d3.select(el).html("").append("svg").attr("viewBox", "0 0 " + w + " " + h)
+      .attr("role", "img").attr("aria-label", "Variación de precio por producto");
+    svg.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", h).attr("stroke", "#c9c4b8");
+
+    var g = svg.selectAll("g.ecd-row").data(filas).enter().append("g").attr("class", "ecd-row")
+      .attr("transform", function (d, i) { return "translate(0," + (i * fila + 4) + ")"; })
+      .attr("tabindex", 0).attr("role", "button")
+      .attr("aria-label", function (d) { return d.p.nombre + ": " + fPct(d.v) + ". Ver detalle"; });
+    g.append("rect").attr("class", "ecd-row__hit").attr("x", 0).attr("y", 0).attr("width", w).attr("height", fila - 2).attr("fill", "transparent").attr("rx", 4);
+    g.append("text").attr("class", "ecd-row__nombre").attr("x", 0).attr("y", fila / 2 - 1).attr("dy", "0.32em")
+      .attr("font-size", movil ? 13 : 14).attr("fill", "#1f1d1a")
+      .text(function (d) { return movil && d.p.nombre.length > 16 ? d.p.nombre.split(" ").slice(0, 2).join(" ") : d.p.nombre; });
+    g.append("path").attr("fill", function (d) { return tipo(d.v) === "baja" ? "#4a4741" : tipo(d.v) === "sube" ? "#d65442" : "#a39d90"; })
+      .attr("d", function (d) { return barra(x(0), x(d.v), (fila - bh) / 2 - 1, bh, 4) || barra(x(0) - 1, x(0) + 1, (fila - bh) / 2 - 1, bh, 0); });
+    g.append("text").attr("x", function (d) { return d.v >= 0 ? x(d.v) + 6 : x(d.v) - 6; })
+      .attr("text-anchor", function (d) { return d.v >= 0 ? "start" : "end"; })
+      .attr("y", fila / 2 - 1).attr("dy", "0.32em").attr("font-size", 13).attr("fill", "#4a4741")
+      .style("font-variant-numeric", "tabular-nums").text(function (d) { return fPct(d.v); });
+
+    g.on("pointermove pointerdown", function (ev, d) {
+      tip.show("<b>" + esc(d.p.nombre) + "</b><br>" + flecha(d.v) + " " + fPct(d.v) +
+        '<br><span class="ecd-tip__muted">Hoy: ' + fSol(d.p.hoy) + " por " + (d.p.unidad === "litro" ? "litro" : "kg") + "</span>", ev.clientX, ev.clientY);
+    }).on("pointerleave", tip.hide)
+      .on("click", function (ev, d) { alElegir(d.p.id, true); })
+      .on("keydown", function (ev, d) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); alElegir(d.p.id, true); } });
+  }
+
+  // Mismos productos que el ranking, ubicados dentro de su rango de 90 días
+  function chartRango(el, seleccion, M, tip, alElegir) {
+    var filas = seleccion.map(function (d) { return d.p; }).filter(function (p) { return p.max > p.min; }).map(function (p) {
+      return { p: p, pos: (p.hoy - p.min) / (p.max - p.min), posProm: (p.prom - p.min) / (p.max - p.min) };
+    }).sort(function (a, b) { return b.pos - a.pos; });
+    var w = ancho(el), movil = w < 500, lab = movil ? 118 : 190, der = 62;
+    var fila = 30, h = filas.length * fila + 30;
+    var x = d3.scaleLinear().domain([0, 1]).range([lab + 8, w - der]);
+
+    var svg = d3.select(el).html("").append("svg").attr("viewBox", "0 0 " + w + " " + h)
+      .attr("role", "img").attr("aria-label", "Precio de hoy dentro del rango de 90 días por producto");
+    var ax = svg.append("g").attr("class", "ecd-axis");
+    ax.append("text").attr("x", x(0)).attr("y", 12).text("← Más barato");
+    ax.append("text").attr("x", x(1)).attr("y", 12).attr("text-anchor", "end").text("Más caro →");
+
+    var g = svg.selectAll("g.ecd-row").data(filas).enter().append("g").attr("class", "ecd-row")
+      .attr("transform", function (d, i) { return "translate(0," + (24 + i * fila) + ")"; })
+      .attr("tabindex", 0).attr("role", "button")
+      .attr("aria-label", function (d) { return d.p.nombre + ": hoy " + fSol(d.p.hoy) + ", rango " + fSol(d.p.min) + " a " + fSol(d.p.max) + ". Ver detalle"; });
+    var cy = fila / 2;
+    g.append("rect").attr("class", "ecd-row__hit").attr("x", 0).attr("y", 0).attr("width", w).attr("height", fila - 2).attr("fill", "transparent").attr("rx", 4);
+    g.append("text").attr("class", "ecd-row__nombre").attr("x", 0).attr("y", cy).attr("dy", "0.32em")
+      .attr("font-size", movil ? 13 : 14).attr("fill", "#1f1d1a")
+      .text(function (d) { return movil && d.p.nombre.length > 16 ? d.p.nombre.split(" ").slice(0, 2).join(" ") : d.p.nombre; });
+    g.append("rect").attr("x", x(0)).attr("y", cy - 3).attr("width", x(1) - x(0)).attr("height", 6).attr("rx", 3).attr("fill", "#c9c4b8");
+    g.append("rect").attr("x", function (d) { return x(d.posProm) - 1; }).attr("y", cy - 7).attr("width", 2).attr("height", 14).attr("fill", "#4a4741");
+    g.append("circle").attr("cx", function (d) { return x(d.pos); }).attr("cy", cy).attr("r", 6.5)
+      .attr("fill", function (d) { return d.p.hoy >= d.p.prom ? "#d65442" : "#4a4741"; }).attr("stroke", "#fff").attr("stroke-width", 2);
+    g.append("text").attr("x", w).attr("y", cy).attr("dy", "0.32em").attr("text-anchor", "end").attr("font-size", 13).attr("fill", "#4a4741")
+      .style("font-variant-numeric", "tabular-nums").text(function (d) { return fSol(d.p.hoy); });
+
+    g.on("pointermove pointerdown", function (ev, d) {
+      var difProm = d.p.hoy / d.p.prom - 1;
+      tip.show("<b>" + esc(d.p.nombre) + "</b><br>Hoy: " + fSol(d.p.hoy) + " (" + fPct(difProm) + " vs. su promedio)" +
+        '<br><span class="ecd-tip__muted">Mínimo: ' + fSol(d.p.min) + " (" + fCorta(M.fechas[d.p.iMin]) + ")<br>Máximo: " +
+        fSol(d.p.max) + " (" + fCorta(M.fechas[d.p.iMax]) + ")<br>Promedio: " + fSol(d.p.prom) + "</span>", ev.clientX, ev.clientY);
+    }).on("pointerleave", tip.hide)
+      .on("click", function (ev, d) { alElegir(d.p.id, true); })
+      .on("keydown", function (ev, d) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); alElegir(d.p.id, true); } });
+  }
+
+  // Una sola línea con los hitos escritos sobre el gráfico (más barato, más caro y hoy):
+  // se entiende sin pasar el mouse ni leer ejes.
+  function chartProducto(el, M, p, tip) {
+    var w = ancho(el), movil = w < 500, h = movil ? 230 : 280;
+    var m = { t: 34, r: movil ? 64 : 76, b: 30, l: 8 };
+    var dia = [];
+    p.serie.forEach(function (v, i) { if (v != null) dia.push({ i: i, f: M.fechas[i], v: v }); });
+    var x = d3.scaleTime().domain(d3.extent(dia, function (d) { return aFecha(d.f); })).range([m.l, w - m.r]);
+    var holgura = (p.max - p.min) * 0.18 || p.max * 0.1;
+    var y = d3.scaleLinear().domain([p.min - holgura, p.max + holgura]).range([h - m.b, m.t]);
+    var px = function (i) { return x(aFecha(M.fechas[i])); }, py = function (i) { return y(p.serie[i]); };
+
+    var svg = d3.select(el).html("").append("svg").attr("viewBox", "0 0 " + w + " " + h)
+      .attr("role", "img").attr("aria-label", "Precio diario de " + p.nombre + " en los últimos 90 días: hoy " + fSol(p.hoy) +
+        ", el más barato " + fSol(p.min) + " el " + fCorta(M.fechas[p.iMin]) + " y el más caro " + fSol(p.max) + " el " + fCorta(M.fechas[p.iMax]));
+
+    svg.append("line").attr("x1", m.l).attr("x2", w - m.r).attr("y1", h - m.b).attr("y2", h - m.b).attr("stroke", "#c9c4b8");
+    var gx = svg.append("g").attr("class", "ecd-axis").attr("transform", "translate(0," + (h - m.b + 18) + ")");
+    x.ticks(movil ? 3 : 4).forEach(function (t) {
+      gx.append("text").attr("x", x(t)).attr("text-anchor", "middle").text(t.getDate() + " " + MESES[t.getMonth()]);
+    });
+
+    var area = d3.area().x(function (d) { return x(aFecha(d.f)); }).y0(h - m.b).y1(function (d) { return y(d.v); });
+    var linea = d3.line().x(function (d) { return x(aFecha(d.f)); }).y(function (d) { return y(d.v); });
+    svg.append("path").datum(dia).attr("d", area).attr("fill", "#d65442").attr("fill-opacity", 0.08);
+    svg.append("path").datum(dia).attr("d", linea).attr("fill", "none").attr("stroke", "#d65442")
+      .attr("stroke-width", 2).attr("stroke-linejoin", "round").attr("stroke-linecap", "round");
+
+    // Etiqueta que no se sale del gráfico: alineada a la izquierda, al centro o a la derecha del punto
+    function rotulo(i, dy, texto, color) {
+      var cx = px(i), ancla = cx < w * 0.25 ? "start" : cx > w * 0.6 ? "end" : "middle";
+      svg.append("text").attr("x", cx + (ancla === "start" ? -4 : ancla === "end" ? 4 : 0)).attr("y", py(i) + dy)
+        .attr("text-anchor", ancla).attr("font-size", 12).attr("fill", color || "#4a4741").text(texto);
+    }
+    function punto(i, r, color) {
+      svg.append("circle").attr("cx", px(i)).attr("cy", py(i)).attr("r", r).attr("fill", color).attr("stroke", "#fff").attr("stroke-width", 2);
+    }
+    var esMax = p.iMax === p.iHoy, esMin = p.iMin === p.iHoy;
+    if (p.max > p.min) {
+      punto(p.iMax, 5, "#d65442");
+      rotulo(p.iMax, -12, esMax ? "Su precio más alto en 3 meses" :
+        (movil ? "Más caro: " + fSol(p.max) : "Más caro: " + fSol(p.max) + " (" + fCorta(M.fechas[p.iMax]) + ")"));
+      punto(p.iMin, 5, "#4a4741");
+      rotulo(p.iMin, 22, esMin ? "Su precio más bajo en 3 meses" :
+        (movil ? "Más barato: " + fSol(p.min) : "Más barato: " + fSol(p.min) + " (" + fCorta(M.fechas[p.iMin]) + ")"));
+    }
+    punto(p.iHoy, 6.5, "#d65442");
+    var tHoy = svg.append("text").attr("x", px(p.iHoy) + 10).attr("y", py(p.iHoy) - 2).attr("fill", "#1f1d1a");
+    tHoy.append("tspan").attr("font-size", 12).attr("fill", "#7a756b").text("Hoy");
+    tHoy.append("tspan").attr("x", px(p.iHoy) + 10).attr("dy", 16).attr("font-size", 15).attr("font-weight", 700).text(fSol(p.hoy));
+
+    // Hover/toque opcional para consultar cualquier día
+    var regla = svg.append("line").attr("y1", m.t).attr("y2", h - m.b).attr("stroke", "#a39d90").attr("visibility", "hidden");
+    var pDia = svg.append("circle").attr("r", 4.5).attr("fill", "#d65442").attr("stroke", "#fff").attr("stroke-width", 2).attr("visibility", "hidden");
+    var bis = d3.bisector(function (d) { return aFecha(d.f); }).center;
+    svg.append("rect").attr("x", m.l).attr("y", 0).attr("width", w - m.l - m.r).attr("height", h).attr("fill", "transparent")
+      .style("touch-action", "pan-y")
+      .on("pointermove pointerdown", function (ev) {
+        var d = dia[bis(dia, x.invert(d3.pointer(ev)[0]))], cx = x(aFecha(d.f));
+        regla.attr("x1", cx).attr("x2", cx).attr("visibility", "visible");
+        pDia.attr("cx", cx).attr("cy", y(d.v)).attr("visibility", "visible");
+        tip.show("<b>" + fCorta(d.f) + "</b><br>" + fSol(d.v) + " por kilo", ev.clientX, ev.clientY);
+      })
+      .on("pointerleave", function () { regla.attr("visibility", "hidden"); pDia.attr("visibility", "hidden"); tip.hide(); });
+  }
+
+  // ---------------------------------------------------------------- textos y KPIs
+  function hero(root, M, per) {
+    var cambios = M.general.map(function (p) { return cambio(p.serie, M.L, per); }).filter(function (v) { return v != null; });
+    var media = mediaGeo(cambios.map(function (v) { return 1 + v; })) - 1, suben = cambios.filter(function (v) { return tipo(v) === "sube"; }).length;
+    var bajan = cambios.filter(function (v) { return tipo(v) === "baja"; }).length;
+    var verbo = tipo(media) === "sube" ? "subieron" : tipo(media) === "baja" ? "bajaron" : "se mantuvieron";
+    root.querySelector('[data-ecd="hero"]').innerHTML =
+      '<span class="ecd-hero__num">' + flecha(media) + " " + fPct(media) + "</span>" +
+      '<span class="ecd-hero__txt">' + PERIODOS[per].hero + ", los precios mayoristas " + verbo +
+      (verbo === "se mantuvieron" ? "" : " en promedio") + ". " +
+      suben + " de " + cambios.length + " productos subieron y " + bajan + " bajaron.</span>";
+  }
+
+  // Frase en lenguaje simple: precio de hoy, dónde está frente a sus 3 meses y cómo cambió en el periodo elegido
+  function frase(root, M, p, per) {
+    var nombre = p.nombre.charAt(0).toLowerCase() + p.nombre.slice(1);
+    var pos = p.max > p.min ? (p.hoy - p.min) / (p.max - p.min) : 0.5;
+    var lugar = p.hoy >= p.max ? "su precio más alto en 3 meses"
+      : p.hoy <= p.min ? "su precio más bajo en 3 meses"
+      : pos >= 0.8 ? "cerca de su precio más alto en 3 meses"
+      : pos <= 0.2 ? "cerca de su precio más bajo en 3 meses"
+      : p.hoy > p.prom * 1.03 ? "por encima de lo que suele costar"
+      : p.hoy < p.prom * 0.97 ? "por debajo de lo que suele costar"
+      : "en línea con lo que suele costar";
+    var unidad = p.unidad === "litro" ? "litro" : "kilo";
+    var texto = "Al " + fCorta(M.fechas[p.iHoy]) + ", el " + unidad + " de " + esc(nombre) + " cuesta <b>" + fSol(p.hoy) +
+      "</b> en el mercado mayorista, " + lugar + ".";
+
+    var v = cambio(p.serie, M.L, per);
+    if (v != null) {
+      var t = tipo(v), pct = (Math.abs(v) * 100).toFixed(1) + "%";
+      var dif = t === "igual" ? null : flecha(v) + " " + pct + (t === "sube" ? " más" : " menos");
+      if (per === "dia") {
+        var iAnt = ultimo(p.serie, p.iHoy - 1);
+        texto += " El " + fCorta(M.fechas[iAnt]) + " costaba " + fSol(p.serie[iAnt]) +
+          (dif ? ": <b>" + (t === "sube" ? "subió " : "bajó ") + flecha(v) + " " + pct + "</b>." : ", el mismo precio.");
+      } else {
+        var n = PERIODOS[per].n, act = prom(p.serie, M.L - n + 1, M.L);
+        texto += (per === "semana" ? " Esta semana costó en promedio " : " En los últimos 30 días costó en promedio ") + fSol(act) +
+          (dif ? ": <b>" + dif + "</b> que " + (per === "semana" ? "la semana anterior." : "en los 30 días previos.")
+               : ", lo mismo que " + (per === "semana" ? "la semana anterior." : "en los 30 días previos."));
+      }
+    }
+    root.querySelector('[data-ecd="frase"]').innerHTML = texto;
+    root.querySelector('[data-ecd="producto-nota"]').textContent =
+      "Precio promedio mayorista por " + unidad + " en el " + p.mercado + ". Pasa el cursor o el dedo sobre la línea para ver el precio de cada día.";
+  }
+
+  // ---------------------------------------------------------------- buscador
+  // Un solo control: se escribe "limon" y aparecen "Limón sutil (cajón)", etc.; con la flecha
+  // (o al entrar al campo) se ve la lista completa agrupada por tipo de producto.
+  // Ignora tildes y mayúsculas; flechas, Enter y Escape funcionan con teclado.
+  var MAX_SUGERENCIAS = 40;
+  function crearBuscador(root, prods, alElegir) {
+    var input = root.querySelector('[data-ecd="buscar"]'), lista = root.querySelector('[data-ecd="opciones"]');
+    var boton = root.querySelector('[data-ecd="ver-todos"]');
+    var todos = prods.slice().sort(function (a, b) {
+      return a.grupo.localeCompare(b.grupo, "es") || a.nombre.localeCompare(b.nombre, "es");
+    });
+    var opciones = [], activa = -1, actual = null, agrupado = false;
+
+    function filtrar(q) {
+      var partes = sinTildes(q).split(/\s+/).filter(Boolean);
+      return prods.filter(function (p) { return partes.every(function (t) { return p.busca.indexOf(t) > -1; }); })
+        .sort(function (a, b) {
+          // Primero los que empiezan con lo escrito, luego los productos básicos, luego orden alfabético
+          var ea = sinTildes(a.nombre).indexOf(partes[0]) === 0, eb = sinTildes(b.nombre).indexOf(partes[0]) === 0;
+          if (ea !== eb) return ea ? -1 : 1;
+          if (a.canasta !== b.canasta) return a.canasta ? -1 : 1;
+          return a.nombre.localeCompare(b.nombre, "es");
+        }).slice(0, MAX_SUGERENCIAS);
+    }
+    function abrir(abierta) {
+      lista.hidden = !abierta;
+      input.setAttribute("aria-expanded", String(abierta));
+      boton.setAttribute("aria-expanded", String(abierta));
+    }
+    function pintar() {
+      if (!opciones.length) {
+        lista.innerHTML = '<li class="ecd-combo__vacio">No encontramos ese producto. Prueba con otra palabra.</li>';
+        input.removeAttribute("aria-activedescendant");
+        return;
+      }
+      var grupo = null, html = "";
+      opciones.forEach(function (p, i) {
+        if (agrupado && p.grupo !== grupo) {
+          grupo = p.grupo;
+          html += '<li class="ecd-combo__grupo" role="presentation">' + esc(grupo) + "</li>";
+        }
+        html += '<li class="ecd-combo__op" role="option" id="ecd-op-' + i + '" data-i="' + i + '" aria-selected="' + (i === activa) + '">' +
+          "<span>" + esc(p.nombre) + "</span><small>" + fSol(p.hoy) + "</small></li>";
+      });
+      lista.innerHTML = html;
+      if (activa > -1) input.setAttribute("aria-activedescendant", "ecd-op-" + activa);
+      else input.removeAttribute("aria-activedescendant");
+    }
+    function marcar() {
+      var el = lista.querySelector('[data-i="' + activa + '"]');
+      if (el) el.scrollIntoView({ block: "nearest" });
+    }
+    // Lista completa, con el producto actual resaltado y a la vista
+    function verTodos() {
+      agrupado = true; opciones = todos;
+      activa = actual ? todos.indexOf(actual) : 0;
+      pintar(); abrir(true); marcar();
+    }
+    function elegirOpcion(i) {
+      var p = opciones[i];
+      if (!p) return;
+      abrir(false);
+      input.value = p.nombre;
+      alElegir(p.id);
+    }
+
+    input.addEventListener("input", function () {
+      if (!input.value.trim()) { verTodos(); return; }
+      agrupado = false; opciones = filtrar(input.value); activa = opciones.length ? 0 : -1;
+      pintar(); abrir(true);
+    });
+    input.addEventListener("keydown", function (ev) {
+      if (lista.hidden && (ev.key === "ArrowDown" || ev.key === "ArrowUp")) { ev.preventDefault(); verTodos(); return; }
+      if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+        ev.preventDefault();
+        if (!opciones.length) return;
+        activa = (activa + (ev.key === "ArrowDown" ? 1 : -1) + opciones.length) % opciones.length;
+        pintar(); marcar();
+      } else if (ev.key === "Enter") {
+        ev.preventDefault(); if (!lista.hidden) elegirOpcion(activa > -1 ? activa : 0);
+      } else if (ev.key === "Escape") {
+        abrir(false); if (actual) input.value = actual.nombre;
+      }
+    });
+    // Al entrar al campo se abre la lista completa y el texto queda seleccionado para escribir encima
+    input.addEventListener("focus", function () { input.select(); verTodos(); });
+    // mousedown (no click) para elegir antes de que el campo pierda el foco
+    lista.addEventListener("mousedown", function (ev) {
+      ev.preventDefault();
+      var li = ev.target.closest("[data-i]");
+      if (li) elegirOpcion(+li.getAttribute("data-i"));
+    });
+    boton.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+    boton.addEventListener("click", function () {
+      if (lista.hidden) { input.focus(); verTodos(); } else { abrir(false); }
+    });
+    input.addEventListener("blur", function () {
+      setTimeout(function () { abrir(false); if (actual) input.value = actual.nombre; }, 120);
+    });
+
+    return { mostrar: function (p) { actual = p; if (document.activeElement !== input) input.value = p ? p.nombre : ""; } };
+  }
+
+  // ---------------------------------------------------------------- app
+  function iniciar(root, data) {
+    var M = modelo(data);
+    if (!M.prods.length) throw new Error("sin productos");
+    var tip = crearTip(root.querySelector('[data-ecd="tip"]'));
+    var params = new URLSearchParams(location.search);
+    var porId = {}; M.prods.forEach(function (p) { porId[p.id] = p; });
+    var inicial = porId[params.get("producto")] || porId["papa-amarilla"] || M.prods[0];
+    var estado = { per: "semana", prod: inicial.id };
+
+    // Fecha del último día con precios de todos los mercados (no un domingo con solo pollo y frutas)
+    root.querySelector('[data-ecd="fecha"]').textContent = fCorta(M.indice[M.indice.length - 1].fecha);
+    root.querySelector('[data-ecd="n-productos"]').textContent = M.prods.length;
+    root.querySelector('[data-ecd="indice-sub"]').textContent =
+      "Índice de precios de los " + M.general.length + " productos (" + fCorta(M.indice[0].fecha) + " = 100)";
+
+    var buscador = crearBuscador(root, M.prods, function (id) { elegir(id, false); });
+    buscador.mostrar(porId[estado.prod]);
+
+    function elegir(id, desplazar) {
+      estado.prod = id; buscador.mostrar(porId[id]);
+      dibujarProducto();
+      if (desplazar) root.querySelector("#ecd-producto-seccion").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    function dibujarProducto() {
+      var p = porId[estado.prod];
+      frase(root, M, p, estado.per);
+      chartProducto(root.querySelector('[data-chart="producto"]'), M, p, tip);
+    }
+    function dibujar() {
+      tip.hide();
+      root.querySelector('[data-ecd="periodo-nota"]').textContent = PERIODOS[estado.per].nota;
+      var seleccion = seleccionRanking(M, estado.per);
+      root.querySelector('[data-ecd="ranking-sub"]').textContent = PERIODOS[estado.per].nota;
+      hero(root, M, estado.per);
+      chartIndice(root.querySelector('[data-chart="indice"]'), M, estado.per, tip);
+      chartRanking(root.querySelector('[data-chart="ranking"]'), seleccion, tip, elegir);
+      chartRango(root.querySelector('[data-chart="rango"]'), seleccion, M, tip, elegir);
+      dibujarProducto();
+    }
+
+    Array.prototype.forEach.call(root.querySelectorAll("[data-periodo]"), function (b) {
+      b.addEventListener("click", function () {
+        estado.per = b.getAttribute("data-periodo");
+        Array.prototype.forEach.call(root.querySelectorAll("[data-periodo]"), function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        dibujar();
+      });
+    });
+    window.addEventListener("scroll", tip.hide, { passive: true });
+
+    dibujar();
+    if (params.get("producto")) root.querySelector("#ecd-producto-seccion").scrollIntoView({ block: "start" });
+
+    // Redibuja cuando cambia el ancho del contenedor (rotar el móvil, abrir un panel, salir de un tab oculto)
+    var anchoPrevio = root.clientWidth, t;
+    function alCambiarAncho() {
+      clearTimeout(t);
+      t = setTimeout(function () { if (root.clientWidth !== anchoPrevio) { anchoPrevio = root.clientWidth; dibujar(); } }, 150);
+    }
+    if (window.ResizeObserver) new ResizeObserver(alCambiarAncho).observe(root);
+    else window.addEventListener("resize", alCambiarAncho);
+  }
+
+  function conD3(cb) {
+    if (window.d3) return cb();
+    var s = document.querySelector("script[data-ecd-d3]");
+    if (!s) {
+      s = document.createElement("script");
+      s.src = D3_URL; s.setAttribute("data-ecd-d3", "");
+      document.head.appendChild(s);
+    }
+    s.addEventListener("load", function () { cb(); });
+  }
+
+  function cargar(root) {
+    var src = root.getAttribute("data-src");
+    var error = function (e) { if (window.console) console.warn("[ecd-dash]", e); root.querySelector('[data-ecd="error"]').hidden = false; };
+    fetch(src + (src.indexOf("?") > -1 ? "&" : "?") + "v=" + versionCache(), { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (data) { conD3(function () { try { iniciar(root, data); } catch (e) { error(e); } }); })
+      .catch(error);
+  }
+
+  function init() {
+    var nodos = document.querySelectorAll("[data-ecd-dash]:not([data-ecd-ready])");
+    for (var i = 0; i < nodos.length; i++) { nodos[i].setAttribute("data-ecd-ready", "1"); cargar(nodos[i]); }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+</script>

@@ -1,0 +1,12 @@
+# Pruebas locales (copias de la portada, scripts de una sola vez)
+.preview/
+# Paquete para enviar por correo
+*.zip
+# Python
+__pycache__/
+*.pyc
+# Archivos temporales del script (escritura atómica)
+data/.tmp_*
+# Configuración local de herramientas
+.claude/
+.vscode/
