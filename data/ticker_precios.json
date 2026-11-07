@@ -1,7 +1,7 @@
 {
-  "fecha_datos": "2026-11-06",
+  "fecha_datos": "2026-11-07",
   "es_hoy": true,
-  "generado": "2026-11-06T09:00:53-05:00",
+  "generado": "2026-11-07T13:16:27-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
@@ -14,7 +14,7 @@
       "precio": 5.1,
       "precio_anterior": 5.1,
       "variacion_pct": 0.0,
-      "fecha": "2026-11-06",
+      "fecha": "2026-11-07",
       "desactualizado": false
     },
     {
@@ -23,10 +23,10 @@
       "detalle": "",
       "icono": "papa",
       "unidad": "kg",
-      "precio": 1.75,
-      "precio_anterior": 1.73,
-      "variacion_pct": 1.2,
-      "fecha": "2026-11-06",
+      "precio": 1.71,
+      "precio_anterior": 1.75,
+      "variacion_pct": -2.3,
+      "fecha": "2026-11-07",
       "desactualizado": false
     },
     {
@@ -35,10 +35,10 @@
       "detalle": "",
       "icono": "cebolla",
       "unidad": "kg",
-      "precio": 2.38,
+      "precio": 2.43,
       "precio_anterior": 2.38,
-      "variacion_pct": 0.0,
-      "fecha": "2026-11-06",
+      "variacion_pct": 2.1,
+      "fecha": "2026-11-07",
       "desactualizado": false
     },
     {
@@ -47,10 +47,10 @@
       "detalle": "",
       "icono": "limon",
       "unidad": "kg",
-      "precio": 1.85,
-      "precio_anterior": 1.74,
-      "variacion_pct": 6.3,
-      "fecha": "2026-11-06",
+      "precio": 1.96,
+      "precio_anterior": 1.85,
+      "variacion_pct": 5.9,
+      "fecha": "2026-11-07",
       "desactualizado": false
     },
     {
@@ -59,10 +59,10 @@
       "detalle": "",
       "icono": "palta",
       "unidad": "kg",
-      "precio": 8.65,
-      "precio_anterior": 8.63,
-      "variacion_pct": 0.2,
-      "fecha": "2026-11-06",
+      "precio": 8.73,
+      "precio_anterior": 8.65,
+      "variacion_pct": 0.9,
+      "fecha": "2026-11-07",
       "desactualizado": false
     },
     {
@@ -74,7 +74,7 @@
       "precio": 6.0,
       "precio_anterior": 6.0,
       "variacion_pct": 0.0,
-      "fecha": "2026-11-06",
+      "fecha": "2026-11-07",
       "desactualizado": false
     },
     {
@@ -84,9 +84,9 @@
       "icono": "choclo",
       "unidad": "kg",
       "precio": 8.45,
-      "precio_anterior": 8.93,
-      "variacion_pct": -5.4,
-      "fecha": "2026-11-06",
+      "precio_anterior": 8.45,
+      "variacion_pct": 0.0,
+      "fecha": "2026-11-07",
       "desactualizado": false
     }
   ]
