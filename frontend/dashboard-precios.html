@@ -14,8 +14,8 @@
       <!-- Reemplazar por <img class="ecd-logo" alt="Economía" src="..."> cuando esté el logo de Economía -->
       <span class="ecd-logo ecd-logo--texto">Economía</span>
     </div>
-    <h1 class="ecd-headline">Precios mayoristas: cuánto cuesta hoy la canasta en Lima</h1>
-    <h2 class="ecd-subheadline">Los precios de <span data-ecd="n-productos">todos los</span> productos de los mercados mayoristas de Lima, actualizados cada mañana con datos del Midagri</h2>
+    <h1 class="ecd-headline">Observatorio de precios: Revisa cuánto cuesta la canasta básica hoy en Lima y los precios de los alimentos que más consumes. ¿Cuánto cuesta hoy la canasta básica en Lima?</h1>
+    <h2 class="ecd-subheadline">Conoce cómo variaron los precios de los productos de los mercados mayoristas de Lima, con información del Midagri actualizada cada mañana</h2>
     <div class="ecd-divider"></div>
     <p class="ecd-date">Precios al <span data-ecd="fecha">…</span></p>
   </header>
@@ -23,9 +23,9 @@
   <div class="ecd-filtros" role="group" aria-label="Periodo de comparación">
     <span class="ecd-filtros__label">Comparar por</span>
     <div class="ecd-seg">
-      <button type="button" data-periodo="dia" aria-pressed="false">Día</button>
-      <button type="button" data-periodo="semana" aria-pressed="true">Semana</button>
       <button type="button" data-periodo="mes" aria-pressed="false">Mes</button>
+      <button type="button" data-periodo="semana" aria-pressed="true">Semana</button>
+      <button type="button" data-periodo="dia" aria-pressed="false">Día</button>
     </div>
   </div>
   <p class="ecd-periodo-nota" data-ecd="periodo-nota"></p>
@@ -34,39 +34,40 @@
     <h3 class="ecd-title">Los que más subieron y bajaron</h3>
     <p class="ecd-subtitle" data-ecd="ranking-sub"></p>
     <div class="ecd-chart" data-chart="ranking"></div>
-    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
   </section>
 
   <section class="ecd-section">
-    <h3 class="ecd-title">¿Subieron los precios?</h3>
+    <h3 class="ecd-title">¿Subieron o bajaron los precios?</h3>
     <p class="ecd-subtitle" data-ecd="indice-sub">Índice de una canasta de productos básicos</p>
     <div class="ecd-hero" data-ecd="hero"></div>
     <div class="ecd-chart" data-chart="indice"></div>
     <div class="data-note">El índice es la media geométrica de la variación diaria de los precios de todos los productos, encadenada desde el primer día (= 100), el método estándar para índices sin ponderar: evita que un solo producto que se dispara arrastre a todos los demás. No pondera por el consumo de los hogares. El Gran Mercado Mayorista no opera domingos ni feriados, por lo que esos días no se incluyen.</div>
-    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+    <div class="data-note" data-ecd="nota-numeros"></div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
   </section>
 
   <section class="ecd-section">
     <h3 class="ecd-title">¿Caro o barato para lo que suele costar?</h3>
-    <p class="ecd-subtitle">Precio de hoy de los productos del gráfico anterior, dentro de su rango de los últimos 90 días</p>
+    <p class="ecd-subtitle">Los precios que más subieron y bajaron</p>
     <div class="ecd-leyenda" aria-hidden="true">
       <span><i class="ecd-sw ecd-sw--rango"></i>Rango de 90 días</span>
       <span><i class="ecd-sw ecd-sw--prom"></i>Promedio</span>
-      <span><i class="ecd-sw ecd-sw--caro"></i>Hoy, sobre el promedio</span>
-      <span><i class="ecd-sw ecd-sw--barato"></i>Hoy, bajo el promedio</span>
+      <span><i class="ecd-sw ecd-sw--caro"></i>Hoy, por encima del promedio</span>
+      <span><i class="ecd-sw ecd-sw--barato"></i>Hoy, por debajo del promedio</span>
     </div>
     <div class="ecd-chart" data-chart="rango"></div>
-    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
   </section>
 
   <div class="instrucciones-caja">
     <p class="instrucciones-caja__titulo">¿Cómo usar el buscador?</p>
     <ul>
-      <li>Escribe el nombre de un producto y elige una de las opciones que aparecen</li>
-      <li>O toca la flecha para ver la lista completa, ordenada por tipo de producto</li>
-      <li>Toca cualquier producto de los gráficos de arriba para ver su detalle</li>
-      <li>Pasa el cursor o el dedo sobre la línea para ver el precio de cada día</li>
-      <li>Los botones Día, Semana y Mes cambian el periodo de comparación</li>
+      <li>Escribe el nombre de un producto y elige una de las opciones.</li>
+      <li>También puedes tocar la flecha para ver la lista completa ordenada por tipo de producto.</li>
+      <li>Pulsa en cualquier producto de los gráficos de arriba para conocer el detalle.</li>
+      <li>Pasa el cursor o el dedo sobre la línea para ver el precio de cada día.</li>
+      <li>Los botones “Día, Semana y Mes” cambian el periodo de comparación.</li>
     </ul>
   </div>
 
@@ -84,7 +85,7 @@
     <p class="ecd-frase" data-ecd="frase" aria-live="polite"></p>
     <div class="ecd-chart" data-chart="producto"></div>
     <div class="data-note" data-ecd="producto-nota"></div>
-    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días</div>
+    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
   </section>
 
   <p class="ecd-error" data-ecd="error" hidden>No pudimos cargar los precios en este momento. Vuelve a intentarlo en unos minutos.</p>
@@ -218,12 +219,12 @@
   var D3_URL = "https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js";
   var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
   var PERIODOS = {
-    dia:    { n: 1,  hero: "Respecto al día anterior",
-              nota: "Precio del último día frente al día anterior con datos" },
+    dia:    { n: 1,  hero: "Con respecto al día anterior",  // en el resumen se reemplaza por la fecha real
+              nota: "Precio del último día frente al día previo con datos disponibles" },
     semana: { n: 7,  hero: "En la última semana",
-              nota: "Promedio de los últimos 7 días frente al de los 7 días previos" },
+              nota: "Promedio de los últimos 7 días frente a los 7 días previos con datos disponibles" },
     mes:    { n: 30, hero: "En el último mes",
-              nota: "Promedio de los últimos 30 días frente al de los 30 días previos" }
+              nota: "Promedio de los últimos 30 días frente a los 30 días previos con datos disponibles" }
   };
 
   // ---------------------------------------------------------------- utilidades
@@ -234,6 +235,12 @@
   }
   function aFecha(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); } // local, sin desfase UTC
   function fCorta(iso) { var p = iso.split("-"); return +p[2] + " " + MESES[+p[1] - 1]; }
+  var MESES_LARGOS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  var DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  // "12 de noviembre de 2026"
+  function fLarga(iso) { var p = iso.split("-"); return +p[2] + " de " + MESES_LARGOS[+p[1] - 1] + " de " + p[0]; }
+  // "lunes 10 de noviembre"
+  function fDiaSemana(iso) { var p = iso.split("-"); return DIAS[aFecha(iso).getDay()] + " " + +p[2] + " de " + MESES_LARGOS[+p[1] - 1]; }
   function fSol(v) { return v == null ? "–" : "S/ " + v.toFixed(2); } // espacio duro: "S/" nunca queda separado del número
   function fPct(v) { return v == null ? "–" : (v > 0.0005 ? "+" : "") + (v * 100).toFixed(1) + "%"; }
   function tipo(v) { return v == null || Math.abs(v) < 0.0005 ? "igual" : v > 0 ? "sube" : "baja"; }
@@ -548,12 +555,16 @@
     var cambios = M.general.map(function (p) { return cambio(p.serie, M.L, per); }).filter(function (v) { return v != null; });
     var media = mediaGeo(cambios.map(function (v) { return 1 + v; })) - 1, suben = cambios.filter(function (v) { return tipo(v) === "sube"; }).length;
     var bajan = cambios.filter(function (v) { return tipo(v) === "baja"; }).length;
-    var verbo = tipo(media) === "sube" ? "subieron" : tipo(media) === "baja" ? "bajaron" : "se mantuvieron";
+    var t = tipo(media), verbo = t === "sube" ? "subieron" : t === "baja" ? "bajaron" : "se mantuvieron";
+    // En Día se nombra la fecha real de comparación: el último día anterior con datos
+    var intro = PERIODOS[per].hero;
+    if (per === "dia" && M.indice.length > 1) intro = "Con respecto al " + fDiaSemana(M.indice[M.indice.length - 2].fecha);
+    var detalle = t === "baja"
+      ? "En " + bajan + " de " + cambios.length + " productos cayeron y en " + suben + " incrementaron."
+      : "En " + suben + " de " + cambios.length + " productos incrementaron y en " + bajan + " cayeron.";
     root.querySelector('[data-ecd="hero"]').innerHTML =
       '<span class="ecd-hero__num">' + flecha(media) + " " + fPct(media) + "</span>" +
-      '<span class="ecd-hero__txt">' + PERIODOS[per].hero + ", los precios mayoristas " + verbo +
-      (verbo === "se mantuvieron" ? "" : " en promedio") + ". " +
-      suben + " de " + cambios.length + " productos subieron y " + bajan + " bajaron.</span>";
+      '<span class="ecd-hero__txt">' + intro + ", los precios mayoristas " + verbo + ", en promedio. " + detalle + "</span>";
   }
 
   // Frase en lenguaje simple: precio de hoy, dónde está frente a sus 3 meses y cómo cambió en el periodo elegido
@@ -705,8 +716,13 @@
     var estado = { per: "semana", prod: inicial.id };
 
     // Fecha del último día con precios de todos los mercados (no un domingo con solo pollo y frutas)
-    root.querySelector('[data-ecd="fecha"]').textContent = fCorta(M.indice[M.indice.length - 1].fecha);
-    root.querySelector('[data-ecd="n-productos"]').textContent = M.prods.length;
+    root.querySelector('[data-ecd="fecha"]').textContent = fLarga(M.indice[M.indice.length - 1].fecha);
+    // Los números cambian con los datos de cada día: se calculan aquí, no se escriben a mano
+    var repetidas = M.prods.length - M.general.length;
+    root.querySelector('[data-ecd="nota-numeros"]').textContent = "El buscador incluye " + M.prods.length + " productos. " +
+      (repetidas > 0 ? "El índice considera " + M.general.length + ", porque " + repetidas +
+        (repetidas === 1 ? " variedad se vende" : " variedades se venden") + " en dos mercados y se cuentan una sola vez. " : "") +
+      "Los resúmenes por semana y mes solo incluyen los productos con precios en ambos periodos.";
     root.querySelector('[data-ecd="indice-sub"]').textContent =
       "Índice de precios de los " + M.general.length + " productos (" + fCorta(M.indice[0].fecha) + " = 100)";
 

@@ -93,14 +93,19 @@ CANASTA = [
 ]
 
 # Productos del ticker, en el orden en que se muestran: (mercado, variedad en SISAP, etiqueta, silueta)
-TICKER = [
-    (GMML,    "Papa Amarilla",       "PAPA AMARILLA", "papa"),
-    (GMML,    "Papa Blanca",         "PAPA BLANCA",   "papa"),
-    (GMML,    "Cebolla Cabeza Roja", "CEBOLLA ROJA",  "cebolla"),
-    (GMML,    "Limon Sutil Cajon",   "LIMÓN",         "limon"),
-    (FRUTAS2, "Palta Fuerte",        "PALTA FUERTE",  "palta"),
-    (AVES,    "Pollo Vivo",          "POLLO VIVO",    "pollo"),
-    (GMML,    "Choclo ( Tipo Cusco)", "CHOCLO",       "choclo"),
+TICKER = [  # en orden alfabético; la etiqueta se muestra tal cual
+    (GMML,        "Camote Amarillo",      "Camote amarillo",    "camote"),
+    (GMML,        "Cebolla Cabeza Roja",  "Cebolla roja",       "cebolla"),
+    (GMML,        "Choclo ( Tipo Cusco)", "Choclo",             "choclo"),
+    (SANTA_ANITA, "Huevos Rosados",       "Huevos rosados",     "huevo"),
+    (GMML,        "Kion",                 "Kion",               "kion"),
+    (GMML,        "Limon Sutil Cajon",    "Limón",              "limon"),
+    (FRUTAS2,     "Palta Fuerte",         "Palta fuerte",       "palta"),
+    (GMML,        "Papa Amarilla",        "Papa amarilla",      "papa"),
+    (GMML,        "Papa Blanca",          "Papa blanca",        "papa"),
+    (FRUTAS2,     "Platano Seda Congo",   "Plátano seda Congo", "platano"),
+    (AVES,        "Pollo Vivo",           "Pollo vivo",         "pollo"),
+    (GMML,        "Yuca Amarilla",        "Yuca amarilla",      "yuca"),
 ]
 
 # --- Nombres para mostrar -------------------------------------------------------
@@ -423,6 +428,9 @@ def construir_ticker(precios, productos, anterior: dict, hoy: date, min_items: i
     if not candidatas:
         return None
     fecha_datos = candidatas[0]
+    # Santa Anita (huevos) publica por la tarde: un precio del día anterior con datos se
+    # muestra como los demás; solo se marca desactualizado si está más atrás
+    fecha_minima = candidatas[1] if len(candidatas) > 1 else fecha_datos
 
     previos = {it.get("id"): it for it in anterior.get("items", [])}
     items = []
@@ -436,7 +444,7 @@ def construir_ticker(precios, productos, anterior: dict, hoy: date, min_items: i
         fecha, precio = s[0]
         precio_ant = s[1][1] if len(s) > 1 else None
         var = round((precio - precio_ant) / precio_ant * 100, 1) if precio_ant else None
-        if fecha < fecha_datos:
+        if fecha < fecha_minima:
             log.warning("%s: sin dato el %s, se mantiene el del %s", pid, fecha_datos, fecha)
         items.append({
             "id": pid,
@@ -448,7 +456,7 @@ def construir_ticker(precios, productos, anterior: dict, hoy: date, min_items: i
             "precio_anterior": round(precio_ant, 2) if precio_ant else None,
             "variacion_pct": var,
             "fecha": fecha,
-            "desactualizado": fecha < fecha_datos,
+            "desactualizado": fecha < fecha_minima,
         })
 
     frescos = sum(not it["desactualizado"] for it in items)
