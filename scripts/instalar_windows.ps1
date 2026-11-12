@@ -68,7 +68,7 @@ if ($LASTEXITCODE -ne 0) { Detener "GitHub no dio permiso para subir datos." }
 Paso "6/6 Programando las tareas"
 $usuario = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Limited
 
-$horas = @("07:00", "08:00", "09:00") | ForEach-Object { New-ScheduledTaskTrigger -Daily -At $_ }
+$horas = @("09:00", "12:00", "15:00", "19:00") | ForEach-Object { New-ScheduledTaskTrigger -Daily -At $_ }
 $ajustes = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 30) -MultipleInstances IgnoreNew
 Register-ScheduledTask -TaskName $tareaPrecios -Description "Actualiza los precios del SISAP y los sube a GitHub (ticker y dashboard de ECData / Economia)." -Action (Accion-Oculta (Join-Path $repo "scripts\actualizar_y_publicar.cmd")) -Trigger $horas -Settings $ajustes -Principal $usuario -Force | Out-Null
 

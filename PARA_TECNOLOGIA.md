@@ -11,7 +11,7 @@ Un script en Python los regenera cada mañana con los precios del SISAP del Mida
 
 ## Lo que necesitamos
 
-Correr el script **3 veces al día (7, 8 y 9 a.m., hora de Lima) desde una máquina en el Perú** que esté siempre encendida y tenga salida a internet hacia:
+Correr el script **4 veces al día (9 a.m., 12 p.m., 3 p.m. y 7 p.m., hora de Lima) desde una máquina en el Perú** que esté siempre encendida y tenga salida a internet hacia:
 
 - `sistemas.midagri.gob.pe` (HTTP, puerto 80)
 - `github.com` (HTTPS)
@@ -36,9 +36,9 @@ Correr el script **3 veces al día (7, 8 y 9 a.m., hora de Lima) desde una máqu
    ```bash
    sh scripts/actualizar_y_publicar.sh
    ```
-4. **Programarlo con cron** (servidor en hora de Lima; si está en UTC, usar `0 12,13,14 * * *`):
+4. **Programarlo con cron** (servidor en hora de Lima; si está en UTC, usar `0 14,17,20,0 * * *`):
    ```cron
-   0 7,8,9 * * *  /ruta/a/precios-mayoristas/scripts/actualizar_y_publicar.sh >> /var/log/precios-mayoristas.log 2>&1
+   0 9,12,15,19 * * *  /ruta/a/precios-mayoristas/scripts/actualizar_y_publicar.sh >> /var/log/precios-mayoristas.log 2>&1
    ```
 
 Con eso, la tarea de la PC de Fabrizio se puede desactivar.

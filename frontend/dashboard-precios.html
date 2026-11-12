@@ -229,7 +229,7 @@
 
   // ---------------------------------------------------------------- utilidades
   function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function versionCache() { // cambia cada hora de Lima: las corridas de 7, 8 y 9 a.m. se ven al instante
+  function versionCache() { // cambia cada hora de Lima: cada corrida del día se ve al instante
     var d = new Date(), l = new Date(d.getTime() + d.getTimezoneOffset() * 60000 - 5 * 3600000);
     return "" + l.getFullYear() + pad(l.getMonth() + 1) + pad(l.getDate()) + "-" + pad(l.getHours());
   }

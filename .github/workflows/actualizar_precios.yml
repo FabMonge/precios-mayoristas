@@ -3,9 +3,9 @@ name: Actualizar precios mayoristas (ticker + dashboard)
 on:
   schedule:
     # GitHub Actions usa UTC. Lima = UTC-5 todo el año (sin horario de verano).
-    # 12:00, 13:00 y 14:00 UTC  ->  07:00, 08:00 y 09:00 hora de Perú.
+    # 14:00, 17:00, 20:00 y 00:00 UTC  ->  09:00, 12:00, 15:00 y 19:00 hora de Perú.
     # Minuto 7 en vez de 0: el minuto :00 es el más congestionado y GitHub suele retrasarlo.
-    - cron: "7 12,13,14 * * *"
+    - cron: "7 14,17,20,0 * * *"
   workflow_dispatch: # botón "Run workflow" para correrlo a mano
 
 permissions:

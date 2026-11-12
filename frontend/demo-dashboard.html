@@ -192,8 +192,8 @@
   }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
 
-  // Cache-busting: cambia cada día y cada hora de Lima, así las corridas de
-  // 7, 8 y 9 a.m. se ven sin esperar a que expire la caché del CDN/navegador.
+  // Cache-busting: cambia cada día y cada hora de Lima, así cada corrida del día
+  // se ve sin esperar a que expire la caché del CDN/navegador.
   function versionCache() {
     var l = ahoraLima();
     return "" + l.getFullYear() + pad(l.getMonth() + 1) + pad(l.getDate()) + "-" + pad(l.getHours());
@@ -524,7 +524,7 @@
 
   // ---------------------------------------------------------------- utilidades
   function pad(n) { return (n < 10 ? "0" : "") + n; }
-  function versionCache() { // cambia cada hora de Lima: las corridas de 7, 8 y 9 a.m. se ven al instante
+  function versionCache() { // cambia cada hora de Lima: cada corrida del día se ve al instante
     var d = new Date(), l = new Date(d.getTime() + d.getTimezoneOffset() * 60000 - 5 * 3600000);
     return "" + l.getFullYear() + pad(l.getMonth() + 1) + pad(l.getDate()) + "-" + pad(l.getHours());
   }

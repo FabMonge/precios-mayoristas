@@ -94,7 +94,7 @@ Para cambiar la canasta, edita `CANASTA` en el script. La variedad debe coincidi
 
 ## Automatización (GitHub Actions)
 
-- Cron `7 12,13,14 * * *` UTC = 7:07, 8:07 y 9:07 a.m. en Lima. Perú no tiene horario de verano, así que no hay que ajustarlo.
+- Cron `7 14,17,20,0 * * *` UTC = 9:07 a.m., 12:07, 3:07 y 7:07 p.m. en Lima. Perú no tiene horario de verano, así que no hay que ajustarlo.
 - El workflow hace commit de `data/ticker_precios.json` solo si cambió. Opcionalmente lo sube a S3 e invalida CloudFront: define `vars.S3_BUCKET`, `vars.AWS_REGION`, `secrets.AWS_ROLE_ARN` y, si usas CloudFront, `vars.CLOUDFRONT_ID`.
 - Para probarlo: Actions → *Actualizar precios mayoristas* → **Run workflow**.
 
@@ -102,7 +102,7 @@ Advertencias:
 - GitHub puede retrasar los crons entre 5 y 30 min en horas punta.
 - GitHub desactiva los crons de repos sin actividad en 60 días. Los commits diarios del bot cuentan como actividad.
 - **IP extranjera (confirmado el 3/11/2026):** el SISAP bloquea las conexiones desde fuera del Perú, y los servidores de GitHub están en EE. UU.: el workflow termina sin datos nuevos (no rompe nada). Por eso la actualización real corre desde el Perú con `scripts/actualizar_y_publicar.cmd` (Windows) o `.sh` (Linux):
-  - **Hoy:** tarea programada "Precios mayoristas El Comercio" en la PC de Fabrizio (7, 8 y 9 a.m.; si la PC estaba apagada, corre al prenderla). Usa una copia del repositorio fuera de Google Drive, en `%USERPROFILE%\PreciosMayoristas\repo`. Registro en `%USERPROFILE%\PreciosMayoristas\actualizar.log`; Python en `%USERPROFILE%\PreciosMayoristas\venv`.
+  - **Hoy:** tarea programada "Precios mayoristas El Comercio" en la PC de Fabrizio (9 a.m., 12 p.m., 3 p.m. y 7 p.m.; si la PC estaba apagada, corre al prenderla). Usa una copia del repositorio fuera de Google Drive, en `%USERPROFILE%\PreciosMayoristas\repo`. Registro en `%USERPROFILE%\PreciosMayoristas\actualizar.log`; Python en `%USERPROFILE%\PreciosMayoristas\venv`.
   - **Medición temporal:** la tarea "Medicion publicacion SISAP" registra cada 30 minutos, de 5 a.m. a 7 p.m., si ya están los datos del día. El resultado queda en `%USERPROFILE%\PreciosMayoristas\medicion_publicacion.csv`; no publica nada.
   - **Definitivo:** un servidor del diario en el Perú. Ver `PARA_TECNOLOGIA.md`.
 
