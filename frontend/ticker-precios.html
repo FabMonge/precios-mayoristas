@@ -115,7 +115,7 @@
 <script>
 (function () {
   "use strict";
-  var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  var MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
   // Siluetas (viewBox 24x24, un color). Cada entrada es una lista de trazos con
   // fill-rule evenodd: los subtrazos internos funcionan como recortes (ojos, hueso, granos).
@@ -195,11 +195,11 @@
     return "" + l.getFullYear() + pad(l.getMonth() + 1) + pad(l.getDate()) + "-" + pad(l.getHours());
   }
 
-  // "2026-10-22" -> "22 oct" (sin new Date(iso), que lo interpretaría en UTC y restaría un día)
-  function fechaCorta(iso) {
+  // "2026-11-12" -> "12 de noviembre" (sin new Date(iso), que lo interpretaría en UTC y restaría un día)
+  function fechaLarga(iso) {
     var p = (iso || "").split("-");
     if (p.length !== 3) return "";
-    return parseInt(p[2], 10) + " " + MESES[parseInt(p[1], 10) - 1];
+    return parseInt(p[2], 10) + " de " + MESES[parseInt(p[1], 10) - 1];
   }
 
   function esc(s) {
@@ -218,7 +218,7 @@
     var titulo = nombre + (it.detalle ? " " + it.detalle.toLowerCase() : "") +
       ": S/ " + it.precio.toFixed(2) + " por " + (it.unidad || "kg") +
       (v == null ? "" : ", " + (tipo === "igual" ? "sin variación" : (tipo === "sube" ? "sube " : "baja ") + pct)) +
-      (it.desactualizado ? " (dato del " + fechaCorta(it.fecha) + ")" : "");
+      (it.desactualizado ? " (dato del " + fechaLarga(it.fecha) + ")" : "");
     var contenido = iconoSVG(it.icono) +
       '<span class="ec-ticker__name">' + esc(nombre) + "</span>" +
       '<span class="ec-ticker__price">S/ ' + it.precio.toFixed(2) + "</span>" +
@@ -234,7 +234,7 @@
 
     var track = root.querySelector(".ec-ticker__track");
     var viewport = root.querySelector(".ec-ticker__viewport");
-    root.querySelector(".ec-ticker__date").textContent = "al " + fechaCorta(data.fecha_datos);
+    root.querySelector(".ec-ticker__date").textContent = "al " + fechaLarga(data.fecha_datos);
 
     var bloque = items.map(itemHTML).join("");
     track.innerHTML = bloque;
