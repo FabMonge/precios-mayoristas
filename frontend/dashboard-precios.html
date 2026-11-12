@@ -30,19 +30,6 @@
   </div>
   <p class="ecd-periodo-nota" data-ecd="periodo-nota"></p>
 
-  <div class="ecd-cuerpo">
-    <div class="ecd-riel ecd-riel--izq" aria-hidden="true">
-      <div class="ecd-riel__fijo">
-        <picture><source media="(min-width: 1160px)" srcset="https://fabmonge.github.io/precios-mayoristas/img/viveres-limones.webp"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" width="340" height="267" decoding="async"></picture>
-        <picture><source media="(min-width: 1160px)" srcset="https://fabmonge.github.io/precios-mayoristas/img/viveres-papas.webp"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" width="340" height="287" decoding="async"></picture>
-      </div>
-    </div>
-    <div class="ecd-riel ecd-riel--der" aria-hidden="true">
-      <div class="ecd-riel__fijo">
-        <picture><source media="(min-width: 1160px)" srcset="https://fabmonge.github.io/precios-mayoristas/img/viveres-cebolla.webp"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" width="340" height="268" decoding="async"></picture>
-        <picture><source media="(min-width: 1160px)" srcset="https://fabmonge.github.io/precios-mayoristas/img/viveres-limon-mitades.webp"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" width="340" height="173" decoding="async"></picture>
-      </div>
-    </div>
   <section class="ecd-section">
     <h3 class="ecd-title">Los que más subieron y bajaron</h3>
     <p class="ecd-subtitle" data-ecd="ranking-sub"></p>
@@ -101,8 +88,6 @@
     <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
   </section>
 
-  </div>
-
   <footer class="special-credits-black">
     <h3 class="credits-main-title">Créditos</h3>
     <div class="credit-block">
@@ -149,30 +134,6 @@
   .ecd-dash *, .ecd-dash *::before, .ecd-dash *::after { box-sizing: border-box; }
 
   .ecd-head { text-align: center; padding: 24px 0 8px; }
-  /* Fotos de víveres en los márgenes, desde el primer gráfico hasta antes de los créditos.
-     Cada riel mide lo mismo que el cuerpo; dentro, las fotos quedan fijas (sticky) al bajar
-     y se detienen al terminar el riel. Solo en pantallas anchas, donde hay espacio fuera de
-     la columna; con <picture> y media query, en pantallas angostas no se descargan. */
-  .ecd-cuerpo { position: relative; }
-  .ecd-riel { display: none; }
-  @media (min-width: 1160px) {
-    .ecd-riel { display: block; position: absolute; top: 0; bottom: 0; width: 180px; pointer-events: none; }
-    .ecd-riel--izq { left: -212px; }
-    .ecd-riel--der { right: -212px; }
-  }
-  /* Con más espacio: fotos 20% más grandes y más lejos del centro */
-  @media (min-width: 1380px) {
-    .ecd-riel { width: 216px; }
-    .ecd-riel--izq { left: -290px; }
-    .ecd-riel--der { right: -290px; }
-  }
-  @media (min-width: 1160px) {
-    .ecd-riel__fijo { position: sticky; top: 90px; }
-    .ecd-riel picture, .ecd-riel img { display: block; width: 100%; height: auto; }
-    .ecd-riel picture + picture { margin-top: 22px; }
-    .ecd-riel--izq picture + picture { transform: translateX(24px); }
-    .ecd-riel--der picture + picture { transform: translateX(-24px); }
-  }
   .ecd-logos { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 0 16px; }
   .ecd-logo { display: block; height: 29px; width: auto; }
   .ecd-logo--texto { height: auto; font: 700 24px/29px Georgia, "Times New Roman", serif; color: var(--ink); }
