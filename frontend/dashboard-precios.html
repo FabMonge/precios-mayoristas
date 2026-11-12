@@ -85,7 +85,7 @@
     <p class="ecd-frase" data-ecd="frase" aria-live="polite"></p>
     <div class="ecd-chart" data-chart="producto"></div>
     <div class="data-note" data-ecd="producto-nota"></div>
-    <div class="source-note">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
+    <div class="source-note" data-ecd="producto-fuente">Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.</div>
   </section>
 
   <footer class="special-credits-black">
@@ -311,7 +311,8 @@
       });
       return {
         id: p.id, nombre: p.nombre, grupo: p.grupo, mercado: p.mercado, unidad: p.unidad || "kg",
-        canasta: !!p.canasta, principal: p.principal !== false, serie: s, n: valores.length,
+        canasta: !!p.canasta, principal: p.principal !== false, minorista: !!p.minorista, fuente: p.fuente,
+        serie: s, n: valores.length,
         busca: sinTildes(p.nombre + " " + p.grupo),
         hoy: iHoy < 0 ? null : s[iHoy], iHoy: iHoy, iMin: iMin, iMax: iMax,
         min: s[iMin], max: s[iMax],
@@ -608,7 +609,7 @@
       : "en línea con lo que suele costar";
     var unidad = p.unidad === "litro" ? "litro" : "kilo";
     var texto = "Al " + fFecha(M.fechas[p.iHoy]) + ", el " + unidad + " de " + esc(nombre) + " cuesta <b>" + fSol(p.hoy) +
-      "</b> en el mercado mayorista, " + lugar + ".";
+      "</b> " + (p.minorista ? "en los mercados minoristas" : "en el mercado mayorista") + ", " + lugar + ".";
 
     var v = cambio(p.serie, M.L, per);
     if (v != null) {
@@ -626,8 +627,13 @@
       }
     }
     root.querySelector('[data-ecd="frase"]').innerHTML = texto;
-    root.querySelector('[data-ecd="producto-nota"]').textContent =
-      "Precio promedio mayorista por " + unidad + " en el " + p.mercado + ". Pasa el cursor o el dedo sobre la línea para ver el precio de cada día.";
+    root.querySelector('[data-ecd="producto-nota"]').textContent = (p.minorista
+      ? "Precio promedio al consumidor por " + unidad + " en " + p.mercado + ". No entra en el índice ni en el ranking, que usan precios mayoristas."
+      : "Precio promedio mayorista por " + unidad + " en el " + p.mercado + ".") +
+      " Pasa el cursor o el dedo sobre la línea para ver el precio de cada día.";
+    root.querySelector('[data-ecd="producto-fuente"]').textContent = p.minorista
+      ? "Fuente: " + (p.fuente || "Midagri") + ". Elaboración: ECData y Economía. Precios diarios de los últimos 90 días, de lunes a viernes."
+      : FUENTE_SISAP;
   }
 
   // ---------------------------------------------------------------- buscador
@@ -635,6 +641,7 @@
   // (o al entrar al campo) se ve la lista completa agrupada por tipo de producto.
   // Ignora tildes y mayúsculas; flechas, Enter y Escape funcionan con teclado.
   var MAX_SUGERENCIAS = 40;
+  var FUENTE_SISAP = "Fuente: Sistema de Precios y Abastecimientos (SISAP). Elaboración: ECData y Economía. Precios promedio mayoristas diarios de los últimos 90 días.";
   function crearBuscador(root, prods, alElegir) {
     var input = root.querySelector('[data-ecd="buscar"]'), lista = root.querySelector('[data-ecd="opciones"]');
     var boton = root.querySelector('[data-ecd="ver-todos"]');
@@ -746,10 +753,12 @@
     // Fecha del último día con precios de todos los mercados (no un domingo con solo pollo y frutas)
     root.querySelector('[data-ecd="fecha"]').textContent = fLarga(M.indice[M.indice.length - 1].fecha);
     // Los números cambian con los datos de cada día: se calculan aquí, no se escriben a mano
-    var repetidas = M.prods.length - M.general.length;
+    var minoristas = M.prods.filter(function (p) { return p.minorista; }).length;
+    var repetidas = M.prods.length - M.general.length - minoristas;
     root.querySelector('[data-ecd="nota-numeros"]').textContent = "El buscador incluye " + M.prods.length + " productos. " +
       (repetidas > 0 ? "El índice considera " + M.general.length + ", porque " + repetidas +
         (repetidas === 1 ? " variedad se vende" : " variedades se venden") + " en dos mercados y se cuentan una sola vez. " : "") +
+      (minoristas ? "El precio del pollo al consumidor viene de otra fuente y no entra en el índice. " : "") +
       "Los resúmenes por semana y mes solo incluyen los productos con precios en ambos periodos.";
     root.querySelector('[data-ecd="indice-sub"]').textContent =
       "Índice de precios de los " + M.general.length + " productos (" + fFecha(M.indice[0].fecha) + " = 100)";

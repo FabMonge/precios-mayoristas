@@ -3,7 +3,10 @@
 Ticker y dashboard de precios mayoristas - El Comercio
 Extrae precios diarios del SISAP (MIDAGRI) y genera:
   * data/historico_precios.json  -> todos los productos, serie diaria de 90 días (dashboard)
-  * data/ticker_precios.json     -> 7 productos con su último precio y variación (ticker)
+  * data/ticker_precios.json     -> 12 productos con su último precio y variación (ticker)
+
+Además, el precio del pollo eviscerado al consumidor (mercados minoristas) se lee del boletín
+diario de aves del Midagri, en PDF: solo para el dashboard, fuera del índice y del ranking.
 
 Endpoints (descubiertos en el JS del portal SISAP v2, módulo "Mercados"):
     POST http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/generos/filtrarPorMercado
@@ -36,6 +39,7 @@ Resiliencia:
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import logging
 import os
@@ -399,6 +403,8 @@ def historico_a_disco(precios, productos, consultas, hoy: date, dias: int) -> di
         (f for f in productos.values() if any(d >= desde for d in precios.get(f["id"], {}))),
         key=lambda f: (orden[f["mercado_codigo"]], normalizar(f["grupo"]), normalizar(f["nombre"])),
     )
+    if any(d >= desde for d in precios.get(POLLO_CONSUMIDOR["id"], {})):
+        fichas.append(dict(POLLO_CONSUMIDOR))
     return {
         "version": VERSION_HISTORICO,
         "generado": datetime.now(LIMA_TZ).isoformat(timespec="seconds"),
@@ -408,6 +414,80 @@ def historico_a_disco(precios, productos, consultas, hoy: date, dias: int) -> di
         "precios": {f["id"]: [precios[f["id"]].get(d) for d in fechas] for f in fichas},
         "consultas": {m: sorted(d for d in fs if d >= desde) for m, fs in consultas.items()},
     }
+
+
+# ---------------------------------------------------------------- pollo al consumidor
+# El SISAP solo trae precios mayoristas. El del pollo eviscerado al consumidor sale del boletín
+# diario de aves del Midagri (PDF; se publica por la tarde, de lunes a viernes), en una fila:
+#   "Consumidor (mercados minoristas)  prom. 7 días  día anterior  día  var. %"
+# Formato vigente desde el 19 de agosto de 2026; si cambia, la fila no se reconoce, se avisa en
+# el registro y el dashboard conserva los precios ya guardados.
+URL_BOLETIN_AVES = ("https://siea.midagri.gob.pe/files/datos_estadisticas/diarias/aves/"
+                    "{a}/{m:02d}/sisap-aves-{d:02d}{mes}{aa:02d}.pdf")
+MESES_CORTOS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "set", "oct", "nov", "dic"]
+BOLETIN = "boletin-aves"  # clave de "consultas" en el histórico
+RE_CONSUMIDOR = re.compile(
+    r"Consumidor \(mercados minoristas\)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(-?\d+\.\d+)\s*%")
+POLLO_CONSUMIDOR = {
+    "id": "pollo-consumidor", "mercado_codigo": BOLETIN, "clave": "pollo eviscerado consumidor",
+    "principal": False,  # no entra en el índice ni en el ranking (son precios mayoristas)
+    "minorista": True, "nombre": "Pollo eviscerado (precio al consumidor)", "grupo": "Pollo",
+    "mercado": "mercados minoristas de Lima", "unidad": "kg", "canasta": True,
+    "fuente": "Boletín diario de aves del Midagri",
+}
+
+
+def actualizar_pollo_consumidor(sesion, precios, consultas, hoy: date, dias: int) -> int:
+    """Completa la serie del pollo al consumidor. Devuelve nº de boletines leídos."""
+    try:
+        import pdfplumber
+    except ImportError:
+        log.warning("Pollo al consumidor: falta pdfplumber (pip install -r scripts/requirements.txt); se omite")
+        return 0
+    logging.getLogger("pdfminer").setLevel(logging.ERROR)
+    hechas = consultas.setdefault(BOLETIN, set())
+    serie = precios.setdefault(POLLO_CONSUMIDOR["id"], {})
+    leidos, errores_seguidos = 0, 0
+    for i in range(dias):
+        dia = hoy - timedelta(days=i)
+        iso = dia.isoformat()
+        reciente = i < REFRESCAR_DIAS
+        if iso in serie or (iso in hechas and not reciente):
+            continue
+        if errores_seguidos >= MAX_ERRORES_SEGUIDOS:
+            log.error("Circuit breaker: el sitio de boletines no responde, se deja para la próxima corrida")
+            break
+        url = URL_BOLETIN_AVES.format(a=dia.year, m=dia.month, d=dia.day,
+                                      mes=MESES_CORTOS[dia.month - 1], aa=dia.year % 100)
+        try:
+            r = sesion.get(url, timeout=40)
+            errores_seguidos = 0
+        except requests.RequestException as e:
+            errores_seguidos += 1
+            log.warning("Boletín de aves %s: error de red (%s)", iso, e)
+            continue
+        if r.status_code != 200 or not r.content.startswith(b"%PDF"):
+            # Sin boletín (fin de semana, feriado o aún no publicado). Un día reciente se reintenta.
+            if r.status_code == 404 and not reciente:
+                hechas.add(iso)
+            continue
+        try:
+            with pdfplumber.open(io.BytesIO(r.content)) as pdf:
+                texto = "\n".join((pg.extract_text() or "") for pg in pdf.pages[:2])
+        except Exception as e:  # PDF dañado: se reintenta en la próxima corrida
+            log.warning("Boletín de aves %s: no se pudo leer el PDF (%s)", iso, e)
+            continue
+        if not reciente:
+            hechas.add(iso)
+        m = RE_CONSUMIDOR.search(texto)
+        precio = float(m[3]) if m else None
+        if precio is None or not 3 <= precio <= 40:
+            log.warning("Boletín de aves %s: no se reconoce el precio al consumidor", iso)
+            continue
+        serie[iso] = precio
+        leidos += 1
+        log.info("Boletín de aves %s: pollo al consumidor S/ %.2f", iso, precio)
+    return leidos
 
 
 # ---------------------------------------------------------------- ticker
@@ -519,6 +599,10 @@ def main() -> int:
         print("::warning::El SISAP no respondió ninguna consulta. Se conservan los JSON actuales.")
         return 0
 
+    try:
+        actualizar_pollo_consumidor(crear_sesion(), precios, consultas, hoy, args.dias)
+    except Exception:
+        log.exception("Fallo inesperado leyendo el boletín de aves; se conserva la serie guardada")
     quitar_copias(precios, productos, hoy)
     hist = historico_a_disco(precios, productos, consultas, hoy, args.dias)
     if sin_cambios(hist, hist_ant):
