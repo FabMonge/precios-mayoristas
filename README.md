@@ -34,9 +34,3 @@ python scripts/actualizar_precios.py
 ```
 
 Si el Midagri no responde o no hay datos nuevos, el script no toca los JSON. El ticker y el dashboard siguen mostrando los últimos precios.
-
-## En Arc
-
-Se pega el contenido de cada archivo de `frontend/` en un bloque HTML. El ticker y el dashboard leen los JSON cada vez que alguien abre la página, así que se actualizan solos sin volver a publicar.
-
-En el ticker, `data-href` tiene que apuntar a la nota publicada, con `#precios-mayoristas` al final. Si los JSON cambian de dirección, hay que actualizar `data-src` en los dos archivos.
