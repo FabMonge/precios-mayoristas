@@ -1,104 +1,91 @@
-# Pase a Tecnología: Observatorio de precios de alimentos
+# Observatorio de precios de alimentos: pase a Tecnología
 
-Ticker de precios para la portada de elcomercio.pe y dashboard para una nota en Arc. Los datos son públicos, del Midagri, y se actualizan solos 4 veces al día.
+Desde ECData y Economía preparamos el **Observatorio de precios de alimentos**, que tiene dos piezas:
 
-Repositorio: https://github.com/FabMonge/precios-mayoristas
+- **Un ticker de precios** para las portadas de las secciones Economía y ECData.
+- **Un dashboard** que se publica como nota especial en Arc.
+
+Los datos son los precios mayoristas diarios del Midagri. El desarrollo está terminado; lo que necesito de ustedes es un lugar donde el proceso de actualización corra solo, todos los días.
+
+Repositorio con todo el código: https://github.com/FabMonge/precios-mayoristas
+Vista previa con datos reales: https://fabmonge.github.io/precios-mayoristas/frontend/demo-dashboard.html
 
 ## Cómo funciona
 
 ```
-Midagri (SISAP + boletín de aves)  →  script en Python (4 veces al día)  →  2 archivos JSON  →  ticker y dashboard
+Midagri  →  script de actualización (4 veces al día)  →  2 archivos de datos (JSON)  →  ticker y nota
 ```
 
-1. `scripts/actualizar_precios.py` descarga los precios mayoristas de 6 mercados de Lima desde el SISAP. También lee del boletín diario de aves en PDF el precio del pollo al consumidor.
-2. Genera dos JSON:
-   - `data/ticker_precios.json` (unos 3 KB): los 12 productos del ticker.
+1. El script `scripts/actualizar_precios.py` descarga los precios de 6 mercados mayoristas de Lima desde el sistema del Midagri (SISAP). Del boletín diario de aves, en PDF, toma el precio del pollo al consumidor.
+2. Con eso genera dos archivos:
+   - `data/ticker_precios.json` (unos 4 KB): los 12 productos del ticker.
    - `data/historico_precios.json` (unos 200 KB): 90 días de todos los productos, para el dashboard.
-3. `scripts/actualizar_y_publicar.sh` corre el script y, solo si los datos cambiaron, hace commit y push al repositorio.
-4. GitHub Pages publica los JSON, y el ticker y el dashboard los leen desde el navegador:
-   - https://fabmonge.github.io/precios-mayoristas/data/ticker_precios.json
-   - https://fabmonge.github.io/precios-mayoristas/data/historico_precios.json
+3. El ticker y la nota no llevan los precios adentro: cada vez que alguien los abre, el navegador descarga esos dos archivos. Por eso la nota se publica una sola vez en Arc y se mantiene al día sin volver a editarla.
 
-Hoy el script corre en la PC de Fabrizio Monge con el Programador de tareas de Windows. Es una solución temporal: si la PC está apagada, los precios no se actualizan.
+Hoy el script corre en mi computadora como solución temporal y publica los archivos en mi cuenta de GitHub. Si la computadora está apagada, los precios no se actualizan.
 
-## Por qué tiene que correr en un servidor en el Perú
+## Lo que necesito
 
-**El SISAP (`sistemas.midagri.gob.pe`) bloquea las conexiones desde fuera del Perú.** Desde GitHub Actions, cuyos servidores están en EE. UU., todas las consultas terminan en timeout. Desde una conexión peruana responden en menos de un segundo. Por eso no sirve un servicio en la nube con IP extranjera.
+### 1. Que el script corra en uno de sus servidores en el Perú
 
-## Lo que se necesita
+- **Tiene que estar en el Perú.** El SISAP bloquea las conexiones desde el extranjero; desde servidores en la nube fuera del país, todas las consultas se quedan sin respuesta.
+- **Horario:** 9 a.m., 12 p.m., 3 p.m. y 7 p.m., hora de Lima. Hay corridas por la tarde porque algunos mercados y el boletín de aves publican después del mediodía.
+- **Es liviano:** cada corrida dura menos de un minuto. No usa base de datos, servicio permanente ni claves de APIs.
+- **Requisitos:** Python 3.10 o superior, en Linux o Windows. El repositorio trae un lanzador para cada uno: `scripts/actualizar_y_publicar.sh` y `scripts/actualizar_y_publicar.cmd`.
+- **Acceso a internet hacia:**
+  - `sistemas.midagri.gob.pe` (HTTP, puerto 80)
+  - `siea.midagri.gob.pe` (HTTPS, puerto 443)
+  - el destino donde se publiquen los datos (punto 2)
 
-**Una máquina Linux en el Perú, siempre encendida**, con:
+### 2. Un espacio del diario para publicar los dos archivos de datos
 
-- Python 3.10 o superior y git.
-- Salida a internet hacia:
-  - `sistemas.midagri.gob.pe`: HTTP, puerto 80 (SISAP).
-  - `siea.midagri.gob.pe`: HTTPS, puerto 443 (boletín de aves en PDF).
-  - `github.com`: HTTPS, puerto 443, o el destino donde se publiquen los JSON (ver la decisión más abajo).
-- Unos 100 MB en disco para el entorno de Python. El script corre de 10 a 60 segundos, 4 veces al día.
+Prefiero que los datos no dependan de mi cuenta personal de GitHub, sino de un espacio de El Comercio: el CDN, un bucket o el servidor donde suelen alojarse los especiales. En cada corrida, el servidor sube ahí los dos JSON, y el ticker y la nota los leen desde esa dirección.
 
-**No hace falta** base de datos, servicio permanente, claves de APIs ni costo: el script corre, escribe dos archivos y termina.
+Lo que necesita esa dirección:
 
-## Pasos de instalación (unos 15 minutos)
+- **Pública y con HTTPS.**
+- **CORS abierto** (`Access-Control-Allow-Origin: *`), para que las páginas de elcomercio.pe puedan leer los archivos.
+- **Caché corta**, de unos 10 minutos como máximo. Si no, los lectores verían precios viejos después de cada actualización.
 
-1. **Clonar el repositorio** con una *deploy key* de escritura. Esa clave da acceso solo a este repositorio, no a una cuenta:
+Cuando tengan la dirección final, me la pasan y la cambio en el ticker y en la nota. Es una línea en cada uno, el atributo `data-src`.
+
+Mientras ese espacio no esté listo, el servidor puede seguir publicando en GitHub, como hoy.
+
+## Instalación
+
+1. **Copiar el repositorio** en el servidor. Es público, así que se puede clonar sin credenciales:
    ```bash
-   ssh-keygen -t ed25519 -f ~/.ssh/precios_mayoristas -N "" -C "servidor precios mayoristas"
-   # Enviar ~/.ssh/precios_mayoristas.pub a Fabrizio para que la agregue en
-   # GitHub → Settings → Deploy keys → Add deploy key (marcar "Allow write access")
-   GIT_SSH_COMMAND="ssh -i ~/.ssh/precios_mayoristas" git clone git@github.com:FabMonge/precios-mayoristas.git
-   cd precios-mayoristas
-   git config core.sshCommand "ssh -i ~/.ssh/precios_mayoristas"
-   git config user.name "Servidor El Comercio" && git config user.email "<correo técnico>"
+   git clone https://github.com/FabMonge/precios-mayoristas.git
    ```
-2. **Instalar las dependencias**: `requests`, `beautifulsoup4` y `pdfplumber`, este último para leer el PDF:
+2. **Instalar las dependencias de Python** (`requests`, `beautifulsoup4` y `pdfplumber`):
    ```bash
    python3 -m venv venv && venv/bin/pip install -r scripts/requirements.txt
    ```
-3. **Probar una vez.** La primera corrida puede tardar un par de minutos si tiene que completar días faltantes:
+3. **Probar una corrida.** La primera puede tardar un par de minutos si tiene que completar días faltantes:
    ```bash
-   sh scripts/actualizar_y_publicar.sh
+   venv/bin/python scripts/actualizar_precios.py
    ```
-   Debe terminar con "Publicado en GitHub" o "Sin cambios en los datos".
-4. **Programarlo con cron** a las 9 a.m., 12 p.m., 3 p.m. y 7 p.m., hora de Lima. Si el servidor está en UTC, usar `0 14,17,20,0 * * *`:
+   Deja los archivos actualizados en `data/`.
+4. **Publicar los archivos.** Después de cada corrida, subir `data/ticker_precios.json` y `data/historico_precios.json` al espacio del punto 2, con el método que usen para su CDN. Si mientras tanto se sigue publicando en GitHub, el lanzador `scripts/actualizar_y_publicar.sh` hace la corrida y el envío juntos. Para eso hace falta permiso de escritura en el repositorio: me envían una *deploy key*, una clave que da acceso solo a este repositorio, y yo la autorizo.
+5. **Dejarlo programado** en los cuatro horarios. Por ejemplo, con cron en un servidor en hora de Lima:
    ```cron
    0 9,12,15,19 * * *  /ruta/a/precios-mayoristas/scripts/actualizar_y_publicar.sh >> /var/log/precios-mayoristas.log 2>&1
    ```
-5. **Avisar a Fabrizio** cuando haya corrido bien un día completo, para desactivar la tarea de su PC. Si las dos máquinas publican a la vez, no se rompe nada, pero se duplican commits.
+   Si el servidor está en UTC: `0 14,17,20,0 * * *`.
 
-## Decisión pendiente: dónde se publican los JSON
-
-Hoy los JSON salen desde el GitHub personal de Fabrizio. Funciona, pero la portada del diario dependería de una cuenta personal. Hay dos caminos:
-
-- **A. Pasar el repositorio a la organización de GitHub del diario** y seguir con GitHub Pages. Es el cambio más chico: los pasos de arriba siguen igual, solo cambia la dirección del repositorio.
-- **B. Publicar los JSON en el CDN o S3 del diario.** En vez del `git push`, el script copia los dos archivos al bucket. El workflow `.github/workflows/actualizar_precios.yml` ya trae un ejemplo del paso para S3.
-
-En cualquiera de los dos casos, si cambia la dirección de los JSON, hay que actualizar el atributo `data-src` en los dos fragmentos de HTML del ticker y del dashboard. Es una línea en cada uno.
-
-Requisitos para la dirección pública de los JSON: CORS abierto (`Access-Control-Allow-Origin: *`) y caché corta, de unos 10 minutos como máximo. GitHub Pages ya cumple las dos cosas.
-
-## Fragmentos de HTML (para portada y Arc)
-
-| Archivo | Dónde va | Qué cambiar |
-|---|---|---|
-| `frontend/ticker-precios.html` | Portada de elcomercio.pe, como bloque HTML | `data-href`: hoy dice `https://elcomercio.pe/URL-DE-LA-NOTA/#precios-mayoristas`. **Hay que poner la URL real de la nota**, con `#precios-mayoristas` al final. |
-| `frontend/dashboard-precios.html` | Nota en Arc, como bloque HTML | Nada, salvo `data-src` si se mueven los JSON. |
-
-Los dos fragmentos son autocontenidos: estilos y código van dentro, con las clases encapsuladas para no chocar con el sitio. El dashboard carga D3 7.9.0 desde cdnjs. Vista previa con datos reales: https://fabmonge.github.io/precios-mayoristas/frontend/demo-dashboard.html
+Cuando haya funcionado bien un día completo, avísenme y desactivo la tarea de mi computadora.
 
 ## Si algo falla
 
-El script está pensado para nunca romper lo publicado:
+El script está hecho para no romper nunca lo publicado:
 
-- Si el SISAP no responde, reintenta. Tras 3 fallos seguidos deja de consultar y **conserva los JSON actuales**: el ticker sigue mostrando el último precio válido.
-- Si un producto del ticker no tiene dato del día, conserva su último precio y lo marca como desactualizado.
-- Si el Midagri cambia el formato del boletín de aves, el pollo al consumidor conserva sus precios guardados y el registro muestra una advertencia. El resto sigue igual.
-- Los JSON se escriben de forma atómica: nunca queda un archivo a medias.
-
-Qué revisar en el registro (`/var/log/precios-mayoristas.log`): líneas `WARNING` o `ERROR`. Una advertencia aislada, como un día sin boletín, es normal. Si se repite varios días, conviene avisar a ECData.
+- **Si el Midagri no responde:** reintenta. Tras 3 fallos seguidos deja de consultar y conserva los archivos actuales, así que el ticker y la nota siguen mostrando los últimos precios válidos.
+- **Si un producto del ticker no tiene dato del día:** conserva su último precio y lo marca como desactualizado.
+- **Si el Midagri cambia el formato del boletín de aves:** el pollo al consumidor mantiene sus precios guardados y el resto sigue igual.
+- **Escritura segura:** los archivos se escriben de forma atómica, así que nunca queda uno a medias.
+- **En el registro:** las líneas `WARNING` o `ERROR` son las que importan. Una advertencia aislada es normal, por ejemplo un día sin boletín. Si se repite varios días, avísenme.
 
 ## Otros detalles
 
-- **Horarios de publicación del Midagri:** el Gran Mercado Mayorista publica temprano, Santa Anita (huevos) hacia las 5–6 p.m. y el boletín de aves por la tarde. Por eso hay corridas a las 3 p.m. y 7 p.m.
 - **Domingos y feriados:** el SISAP repite los precios del día anterior. El script detecta esas copias y las descarta.
-- **GitHub Actions:** el workflow del repositorio sigue programado, pero no logra conectarse al SISAP por el bloqueo y no cambia nada. Se puede desactivar en GitHub → Actions cuando el servidor esté funcionando.
-- **Contacto:** Fabrizio Monge (ECData).
+- **GitHub Actions:** el repositorio tiene un flujo de GitHub Actions programado que no logra conectarse al SISAP por el bloqueo, así que no cambia nada. Lo desactivo cuando el servidor esté funcionando.

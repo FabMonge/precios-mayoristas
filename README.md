@@ -1,6 +1,6 @@
 # Ticker de precios mayoristas · El Comercio
 
-Tira de precios para la portada (7 alimentos) y dashboard con todos los productos del SISAP (MIDAGRI), actualizados solos cada mañana.
+Tira de precios para las portadas de Economía y ECData (12 alimentos) y dashboard con todos los productos del SISAP (MIDAGRI), actualizados solos cada mañana.
 
 **Direcciones públicas (GitHub Pages):**
 - Datos del ticker: https://fabmonge.github.io/precios-mayoristas/data/ticker_precios.json
@@ -102,7 +102,7 @@ Advertencias:
 - GitHub puede retrasar los crons entre 5 y 30 min en horas punta.
 - GitHub desactiva los crons de repos sin actividad en 60 días. Los commits diarios del bot cuentan como actividad.
 - **IP extranjera (confirmado el 3/11/2026):** el SISAP bloquea las conexiones desde fuera del Perú, y los servidores de GitHub están en EE. UU.: el workflow termina sin datos nuevos (no rompe nada). Por eso la actualización real corre desde el Perú con `scripts/actualizar_y_publicar.cmd` (Windows) o `.sh` (Linux):
-  - **Hoy:** tarea programada "Precios mayoristas El Comercio" en la PC de Fabrizio (9 a.m., 12 p.m., 3 p.m. y 7 p.m.; si la PC estaba apagada, corre al prenderla). Usa una copia del repositorio fuera de Google Drive, en `%USERPROFILE%\PreciosMayoristas\repo`. Registro en `%USERPROFILE%\PreciosMayoristas\actualizar.log`; Python en `%USERPROFILE%\PreciosMayoristas\venv`.
+  - **Hoy:** tarea programada "Precios mayoristas El Comercio" en mi PC (9 a.m., 12 p.m., 3 p.m. y 7 p.m.; si la PC estaba apagada, corre al prenderla). Usa una copia del repositorio fuera de Google Drive, en `%USERPROFILE%\PreciosMayoristas\repo`. Registro en `%USERPROFILE%\PreciosMayoristas\actualizar.log`; Python en `%USERPROFILE%\PreciosMayoristas\venv`.
   - **Medición temporal:** la tarea "Medicion publicacion SISAP" registra cada 30 minutos, de 5 a.m. a 7 p.m., si ya están los datos del día. El resultado queda en `%USERPROFILE%\PreciosMayoristas\medicion_publicacion.csv`; no publica nada.
   - **Definitivo:** un servidor del diario en el Perú. Ver `PARA_TECNOLOGIA.md`.
 
