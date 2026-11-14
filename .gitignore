@@ -8,5 +8,4 @@ __pycache__/
 # Archivos temporales del script (escritura atómica)
 data/.tmp_*
 # Configuración local de herramientas
-.claude/
 .vscode/
