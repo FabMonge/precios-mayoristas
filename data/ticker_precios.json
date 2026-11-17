@@ -1,9 +1,9 @@
 {
   "fecha_datos": "2026-11-17",
   "es_hoy": true,
-  "generado": "2026-11-17T09:00:20-05:00",
+  "generado": "2026-11-17T15:48:10-05:00",
   "fuente": "MIDAGRI - SISAP",
-  "estado": "parcial",
+  "estado": "completo",
   "items": [
     {
       "id": "camote-amarillo",
@@ -50,8 +50,8 @@
       "precio": 5.33,
       "precio_anterior": 5.33,
       "variacion_pct": 0.0,
-      "fecha": "2026-11-14",
-      "desactualizado": true
+      "fecha": "2026-11-17",
+      "desactualizado": false
     },
     {
       "id": "kion",
