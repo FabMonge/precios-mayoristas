@@ -427,6 +427,8 @@
   .ecd-dash *, .ecd-dash *::before, .ecd-dash *::after { box-sizing: border-box; }
 
   .ecd-head { text-align: center; padding: 24px 0 8px; }
+  /* La plantilla de Arc deja una columna lateral vacía con 840 px de alto mínimo en escritorio */
+  aside.sidebar-side:empty { min-height: 0 !important; }
   .ecd-logos { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 0 0 16px; }
   .ecd-logo { display: block; height: 38px; width: auto; }
   .ecd-logo--texto { height: auto; font: 700 31px/38px Georgia, "Times New Roman", serif; color: var(--ink); }
