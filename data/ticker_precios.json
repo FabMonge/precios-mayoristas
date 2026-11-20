@@ -1,7 +1,7 @@
 {
-  "fecha_datos": "2026-11-19",
+  "fecha_datos": "2026-11-20",
   "es_hoy": true,
-  "generado": "2026-11-19T19:00:16-05:00",
+  "generado": "2026-11-20T09:19:40-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
@@ -12,9 +12,9 @@
       "icono": "camote",
       "unidad": "kg",
       "precio": 1.13,
-      "precio_anterior": 1.08,
-      "variacion_pct": 4.6,
-      "fecha": "2026-11-19",
+      "precio_anterior": 1.13,
+      "variacion_pct": 0.0,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -23,10 +23,10 @@
       "detalle": "",
       "icono": "cebolla",
       "unidad": "kg",
-      "precio": 2.23,
-      "precio_anterior": 2.28,
-      "variacion_pct": -2.2,
-      "fecha": "2026-11-19",
+      "precio": 2.25,
+      "precio_anterior": 2.23,
+      "variacion_pct": 0.9,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -35,10 +35,10 @@
       "detalle": "",
       "icono": "choclo",
       "unidad": "kg",
-      "precio": 7.92,
+      "precio": 8.21,
       "precio_anterior": 7.92,
-      "variacion_pct": 0.0,
-      "fecha": "2026-11-19",
+      "variacion_pct": 3.7,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -62,7 +62,7 @@
       "precio": 3.9,
       "precio_anterior": 3.9,
       "variacion_pct": 0.0,
-      "fecha": "2026-11-19",
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -71,10 +71,10 @@
       "detalle": "",
       "icono": "limon",
       "unidad": "kg",
-      "precio": 1.74,
-      "precio_anterior": 1.9,
-      "variacion_pct": -8.4,
-      "fecha": "2026-11-19",
+      "precio": 1.63,
+      "precio_anterior": 1.74,
+      "variacion_pct": -6.3,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -83,10 +83,10 @@
       "detalle": "",
       "icono": "palta",
       "unidad": "kg",
-      "precio": 8.63,
-      "precio_anterior": 8.7,
-      "variacion_pct": -0.8,
-      "fecha": "2026-11-19",
+      "precio": 8.45,
+      "precio_anterior": 8.63,
+      "variacion_pct": -2.1,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -98,7 +98,7 @@
       "precio": 3.93,
       "precio_anterior": 3.93,
       "variacion_pct": 0.0,
-      "fecha": "2026-11-19",
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -107,10 +107,10 @@
       "detalle": "",
       "icono": "papa",
       "unidad": "kg",
-      "precio": 2.03,
-      "precio_anterior": 2.0,
-      "variacion_pct": 1.5,
-      "fecha": "2026-11-19",
+      "precio": 1.95,
+      "precio_anterior": 2.03,
+      "variacion_pct": -3.9,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -119,10 +119,10 @@
       "detalle": "",
       "icono": "platano",
       "unidad": "kg",
-      "precio": 2.75,
-      "precio_anterior": 2.73,
-      "variacion_pct": 0.7,
-      "fecha": "2026-11-19",
+      "precio": 2.79,
+      "precio_anterior": 2.75,
+      "variacion_pct": 1.5,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -131,10 +131,10 @@
       "detalle": "",
       "icono": "pollo",
       "unidad": "kg",
-      "precio": 6.2,
+      "precio": 6.1,
       "precio_anterior": 6.2,
-      "variacion_pct": 0.0,
-      "fecha": "2026-11-19",
+      "variacion_pct": -1.6,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
@@ -143,10 +143,10 @@
       "detalle": "",
       "icono": "yuca",
       "unidad": "kg",
-      "precio": 1.73,
-      "precio_anterior": 1.71,
+      "precio": 1.75,
+      "precio_anterior": 1.73,
       "variacion_pct": 1.2,
-      "fecha": "2026-11-19",
+      "fecha": "2026-11-20",
       "desactualizado": false
     }
   ]
