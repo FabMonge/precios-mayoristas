@@ -1,7 +1,7 @@
 {
   "fecha_datos": "2026-11-20",
   "es_hoy": true,
-  "generado": "2026-11-20T09:19:40-05:00",
+  "generado": "2026-11-20T15:35:19-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
@@ -48,9 +48,9 @@
       "icono": "huevo",
       "unidad": "kg",
       "precio": 5.2,
-      "precio_anterior": 5.33,
-      "variacion_pct": -2.4,
-      "fecha": "2026-11-19",
+      "precio_anterior": 5.2,
+      "variacion_pct": 0.0,
+      "fecha": "2026-11-20",
       "desactualizado": false
     },
     {
