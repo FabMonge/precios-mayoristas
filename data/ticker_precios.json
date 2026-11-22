@@ -1,7 +1,7 @@
 {
   "fecha_datos": "2026-11-21",
-  "es_hoy": true,
-  "generado": "2026-11-21T12:01:08-05:00",
+  "es_hoy": false,
+  "generado": "2026-11-22T02:01:02-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
