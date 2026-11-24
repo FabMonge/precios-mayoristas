@@ -1,7 +1,7 @@
 {
   "fecha_datos": "2026-11-24",
   "es_hoy": true,
-  "generado": "2026-11-24T11:42:47-05:00",
+  "generado": "2026-11-24T15:00:38-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
@@ -47,10 +47,10 @@
       "detalle": "",
       "icono": "huevo",
       "unidad": "kg",
-      "precio": 5.15,
-      "precio_anterior": 5.2,
-      "variacion_pct": -1.0,
-      "fecha": "2026-11-23",
+      "precio": 5.05,
+      "precio_anterior": 5.15,
+      "variacion_pct": -1.9,
+      "fecha": "2026-11-24",
       "desactualizado": false
     },
     {
@@ -132,9 +132,9 @@
       "icono": "pollo",
       "unidad": "kg",
       "precio": 10.65,
-      "precio_anterior": 10.34,
-      "variacion_pct": 3.0,
-      "fecha": "2026-11-23",
+      "precio_anterior": 10.65,
+      "variacion_pct": 0.0,
+      "fecha": "2026-11-24",
       "desactualizado": false
     },
     {
