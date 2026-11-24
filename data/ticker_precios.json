@@ -1,7 +1,7 @@
 {
   "fecha_datos": "2026-11-24",
   "es_hoy": true,
-  "generado": "2026-11-24T09:49:16-05:00",
+  "generado": "2026-11-24T11:42:47-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
@@ -126,15 +126,15 @@
       "desactualizado": false
     },
     {
-      "id": "pollo-vivo",
-      "nombre": "Pollo vivo",
+      "id": "pollo-consumidor",
+      "nombre": "Pollo",
       "detalle": "",
       "icono": "pollo",
       "unidad": "kg",
-      "precio": 6.6,
-      "precio_anterior": 6.6,
-      "variacion_pct": 0.0,
-      "fecha": "2026-11-24",
+      "precio": 10.65,
+      "precio_anterior": 10.34,
+      "variacion_pct": 3.0,
+      "fecha": "2026-11-23",
       "desactualizado": false
     },
     {
