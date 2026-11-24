@@ -60,7 +60,7 @@ URL_CATALOGO = "http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/generos/f
 URL_REPORTE = "http://sistemas.midagri.gob.pe/sisap/portal2/mayorista/resumenes/filtrar"
 LIMA_TZ = timezone(timedelta(hours=-5))  # Perú no usa horario de verano
 HISTORICO_DIAS = 90
-REFRESCAR_DIAS = 3        # los últimos N días se vuelven a pedir en cada corrida
+REFRESCAR_DIAS = 7        # los últimos N días se vuelven a pedir en cada corrida (el SISAP corrige datos días después)
 MAX_ERRORES_SEGUIDOS = 3  # tras 3 fallos de red consecutivos se asume servidor caído
 MIN_SERIES_COPIA = 10     # solo se buscan copias en mercados con 10+ variedades ese día
 VERSION_HISTORICO = 3
@@ -73,6 +73,7 @@ AVES = "15010106"         # Mercado Mayorista de Aves Vivas
 SANTA_ANITA = "15013704"  # Mercado de Productores de Santa Anita
 CEREALES = "15011506"     # Mercado Mayorista de Cereales, Legumbres y Oleaginosas
 PLATANOS = "15013405"     # Mercado Cooperativo de Plátanos
+BOLETIN = "boletin-aves"  # boletín diario de aves del Midagri (PDF), no es del SISAP
 # (El Mercado Modelo de Frutas, 15011503, no publica precios: no se incluye)
 
 # Orden = prioridad. Si una variedad se vende en varios mercados, la del primero es la
@@ -108,7 +109,7 @@ TICKER = [  # en orden alfabético; la etiqueta se muestra tal cual
     (GMML,        "Papa Amarilla",        "Papa amarilla",      "papa"),
     (GMML,        "Papa Blanca",          "Papa blanca",        "papa"),
     (FRUTAS2,     "Platano Seda Congo",   "Plátano seda Congo", "platano"),
-    (AVES,        "Pollo Vivo",           "Pollo vivo",         "pollo"),
+    (BOLETIN,     None,                   "Pollo",              "pollo"),  # pollo eviscerado al consumidor
     (GMML,        "Yuca Amarilla",        "Yuca amarilla",      "yuca"),
 ]
 
@@ -425,7 +426,6 @@ def historico_a_disco(precios, productos, consultas, hoy: date, dias: int) -> di
 URL_BOLETIN_AVES = ("https://siea.midagri.gob.pe/files/datos_estadisticas/diarias/aves/"
                     "{a}/{m:02d}/sisap-aves-{d:02d}{mes}{aa:02d}.pdf")
 MESES_CORTOS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "set", "oct", "nov", "dic"]
-BOLETIN = "boletin-aves"  # clave de "consultas" en el histórico
 RE_CONSUMIDOR = re.compile(
     r"Consumidor \(mercados minoristas\)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(-?\d+\.\d+)\s*%")
 POLLO_CONSUMIDOR = {
@@ -496,6 +496,12 @@ def construir_ticker(precios, productos, anterior: dict, hoy: date, min_items: i
     """Último precio de cada producto del ticker vs. su dato previo. None si no hay datos suficientes."""
     elegidos = []
     for mercado, variedad, etiqueta, icono in TICKER:
+        if mercado == BOLETIN:  # el pollo sale del boletín de aves, no del SISAP
+            pid = POLLO_CONSUMIDOR["id"] if precios.get(POLLO_CONSUMIDOR["id"]) else None
+            if pid is None:
+                log.warning("Ticker: no hay precios del pollo al consumidor")
+            elegidos.append((pid, etiqueta, icono))
+            continue
         f = productos.get((mercado, normalizar(variedad)))
         if f is None:
             log.warning("Ticker: %s no aparece en el SISAP", variedad)
@@ -524,7 +530,12 @@ def construir_ticker(precios, productos, anterior: dict, hoy: date, min_items: i
         fecha, precio = s[0]
         precio_ant = s[1][1] if len(s) > 1 else None
         var = round((precio - precio_ant) / precio_ant * 100, 1) if precio_ant else None
-        if fecha < fecha_minima:
+        desact = fecha < fecha_minima
+        if pid == POLLO_CONSUMIDOR["id"]:
+            # El boletín sale por la tarde y no hay de sábado a domingo ni en feriados:
+            # el precio del último boletín se muestra normal hasta 4 días después
+            desact = (date.fromisoformat(fecha_datos) - date.fromisoformat(fecha)).days > 4
+        if desact:
             log.warning("%s: sin dato el %s, se mantiene el del %s", pid, fecha_datos, fecha)
         items.append({
             "id": pid,
@@ -536,7 +547,7 @@ def construir_ticker(precios, productos, anterior: dict, hoy: date, min_items: i
             "precio_anterior": round(precio_ant, 2) if precio_ant else None,
             "variacion_pct": var,
             "fecha": fecha,
-            "desactualizado": fecha < fecha_minima,
+            "desactualizado": desact,
         })
 
     frescos = sum(not it["desactualizado"] for it in items)
