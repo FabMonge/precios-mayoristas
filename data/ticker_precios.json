@@ -1,7 +1,7 @@
 {
   "fecha_datos": "2026-11-26",
   "es_hoy": true,
-  "generado": "2026-11-26T11:14:33-05:00",
+  "generado": "2026-11-26T19:00:15-05:00",
   "fuente": "MIDAGRI - SISAP",
   "estado": "completo",
   "items": [
@@ -132,9 +132,9 @@
       "icono": "pollo",
       "unidad": "kg",
       "precio": 10.85,
-      "precio_anterior": 10.65,
-      "variacion_pct": 1.9,
-      "fecha": "2026-11-25",
+      "precio_anterior": 10.85,
+      "variacion_pct": 0.0,
+      "fecha": "2026-11-26",
       "desactualizado": false
     },
     {
